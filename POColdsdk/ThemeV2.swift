@@ -53,15 +53,15 @@ class Restore {
     init() {
         print("Python \(sys.version_info.major).\(sys.version_info.minor)")
         print(sys.path)
+        sys.path.append(Restore.dirPath)
     }
     func PerformRestore() {
-        sys.path.append(Restore.dirPath)
-        let trollstore = Python.import("trollstore")
-        trollstore.main()
+        let restorer = Python.import("restorer")
+        restorer.main()
     }
-    func getApps() -> Array<String> {
-        sys.path.append(Restore.dirPath)
-        let trollstore = Python.import("trollstore")
-        return Array(trollstore.get_apps())!
+    func getApps() -> Dictionary<String, String> {
+        let restorer = Python.import("restorer")
+        print(Dictionary<String, String>(restorer.get_apps())!)
+        return Dictionary<String, String>(restorer.get_apps())!
     }
 }

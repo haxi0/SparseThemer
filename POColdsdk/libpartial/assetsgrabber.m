@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "partial.h"
+#import "assetsgrabber.h"
 // Code skidded from libgrabkernel2 but changed.
 bool grabAssetsCar(NSString* zipURL, NSString* appName) {
     NSError *error = nil;

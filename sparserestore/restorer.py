@@ -14,7 +14,7 @@ global lockdown
 lockdown = create_using_usbmux(autopair=True)
 
 def exit(code=0):
-#    if platform.system() == "Windows" and getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+#    if platform.system() == "Windows" and g©etattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
 #        input("Press Enter to exit...")
     return code
 
@@ -28,7 +28,6 @@ def cli(service_provider: LockdownClient) -> None:
         click.secho("Make sure your device is connected and try again.", fg="red")
         return
     app = "Discord.app"
-
     apps_json = InstallationProxyService(service_provider).get_apps(application_type="User", calculate_sizes=False)
 
     app_path = None
@@ -44,10 +43,8 @@ def cli(service_provider: LockdownClient) -> None:
     app_uuid = app_path.parent.name
 
     try:
-        cwd = os.getcwd()
-        print(cwd)
         with open('/Users/ibarahime/dev/SparseThemer/sparserestore/Assets.car', "rb") as helper_contents: # TODO: use relative paths for this. but basically the swift app should add the assets file here
-            click.secho(f"Replacing {app} with TrollStore Helper. (UUID: {app_uuid})", fg="yellow")
+            click.secho(f"Replacing {app}. (UUID: {app_uuid})", fg="yellow")
             back = backup.Backup(
                 files=[
                     backup.ConcreteFile(
@@ -61,7 +58,7 @@ def cli(service_provider: LockdownClient) -> None:
                 ]
             )
     except Exception as e:
-        click.secho(f"Failed to download TrollStore Helper: {e}", fg="red")
+        click.secho(f"ERROR: {e}", fg="red")
         return
     try:
         perform_restore(back, reboot=False)
@@ -104,14 +101,13 @@ def get_apps(service_provider: LockdownClient=lockdown):
         return
     apps_json = InstallationProxyService(service_provider).get_apps(application_type="User", calculate_sizes=False)
 
-    # app_path = None
-    apps = []
+    apps = dict()
     for key, value in apps_json.items():
         if isinstance(value, dict) and "Path" in value:
-            apps.append(value["Path"])
-    # print(apps)
+            apps[value["CFBundleIdentifier"]] = value["Path"]
     return apps
 
 if __name__ == "__main__":
-    main()
-    # print(get_apps(lockdown))
+    # main()
+    print(get_apps(lockdown))
+    # get_apps(lockdown)
