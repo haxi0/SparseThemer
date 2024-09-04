@@ -7,6 +7,9 @@
 
 import AssetCatalogWrapper
 import CoreGraphics
+import PythonKit
+
+let sys = Python.import("sys")
 
 enum ImageError: Error {
     case invalidImageData
@@ -41,5 +44,24 @@ class Theme {
                 }
             }
         }
+    }
+}
+
+class Restore {
+    static var shared = Restore()
+    static var dirPath = Bundle.main.path(forResource: "sparserestore", ofType:nil)!
+    init() {
+        print("Python \(sys.version_info.major).\(sys.version_info.minor)")
+        print(sys.path)
+    }
+    func PerformRestore() {
+        sys.path.append(Restore.dirPath)
+        let trollstore = Python.import("trollstore")
+        trollstore.main()
+    }
+    func getApps() -> Array<String> {
+        sys.path.append(Restore.dirPath)
+        let trollstore = Python.import("trollstore")
+        return Array(trollstore.get_apps())!
     }
 }

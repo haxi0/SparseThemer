@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var selectedCar: URL? = nil
     @State private var selectedPng: URL? = nil
     let themer = Theme.shared
-    
+    let restore = Restore.shared
     var body: some View {
         VStack {
             Button("Select .car & .png") {
@@ -25,6 +25,9 @@ struct ContentView: View {
                 } catch {
                     print("kys")
                 }
+            }
+            Button("Try restoring") {
+                restore.PerformRestore()
             }
         }
         .fileImporter(

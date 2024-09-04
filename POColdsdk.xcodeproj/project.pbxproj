@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C81626182C87F74300604D27 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = C81626172C87F74300604D27 /* PythonKit */; };
+		C816261B2C8810D200604D27 /* sparserestore in Resources */ = {isa = PBXBuildFile; fileRef = C81626192C8810D200604D27 /* sparserestore */; };
 		FEBD6C8B2C875E2900D15960 /* POColdsdkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */; };
 		FEBD6C8D2C875E2900D15960 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8C2C875E2900D15960 /* ContentView.swift */; };
 		FEBD6C8F2C875E2A00D15960 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEBD6C8E2C875E2A00D15960 /* Assets.xcassets */; };
@@ -37,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C81626192C8810D200604D27 /* sparserestore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sparserestore; sourceTree = SOURCE_ROOT; };
 		FEBD6C872C875E2900D15960 /* POColdsdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = POColdsdk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POColdsdkApp.swift; sourceTree = "<group>"; };
 		FEBD6C8C2C875E2900D15960 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -58,6 +61,7 @@
 			files = (
 				FEBD6CC12C8772EE00D15960 /* AssetCatalogWrapper in Frameworks */,
 				FEBD6CC42C87739A00D15960 /* AssetCatalogWrapper in Frameworks */,
+				C81626182C87F74300604D27 /* PythonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +105,7 @@
 		FEBD6C892C875E2900D15960 /* POColdsdk */ = {
 			isa = PBXGroup;
 			children = (
+				C81626192C8810D200604D27 /* sparserestore */,
 				FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */,
 				FEBD6C8C2C875E2900D15960 /* ContentView.swift */,
 				FEBD6C8E2C875E2A00D15960 /* Assets.xcassets */,
@@ -155,6 +160,7 @@
 			packageProductDependencies = (
 				FEBD6CC02C8772EE00D15960 /* AssetCatalogWrapper */,
 				FEBD6CC32C87739A00D15960 /* AssetCatalogWrapper */,
+				C81626172C87F74300604D27 /* PythonKit */,
 			);
 			productName = POColdsdk;
 			productReference = FEBD6C872C875E2900D15960 /* POColdsdk.app */;
@@ -230,6 +236,7 @@
 			mainGroup = FEBD6C7E2C875E2900D15960;
 			packageReferences = (
 				FEBD6CC22C87739A00D15960 /* XCRemoteSwiftPackageReference "PrivateKits" */,
+				C81626162C87F74300604D27 /* XCRemoteSwiftPackageReference "PythonKit" */,
 			);
 			productRefGroup = FEBD6C882C875E2900D15960 /* Products */;
 			projectDirPath = "";
@@ -248,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FEBD6C922C875E2A00D15960 /* Preview Assets.xcassets in Resources */,
+				C816261B2C8810D200604D27 /* sparserestore in Resources */,
 				FEBD6C8F2C875E2A00D15960 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,11 +373,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx14.5;
+				SDKROOT = macosx14.4;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -422,10 +430,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				SDKROOT = macosx14.5;
+				SDKROOT = macosx14.4;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -447,6 +455,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.haxi0.POColdsdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -472,6 +481,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.haxi0.POColdsdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -590,6 +600,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C81626162C87F74300604D27 /* XCRemoteSwiftPackageReference "PythonKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pvieito/PythonKit";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		FEBD6CC22C87739A00D15960 /* XCRemoteSwiftPackageReference "PrivateKits" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/NSAntoine/PrivateKits.git";
@@ -601,6 +619,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C81626172C87F74300604D27 /* PythonKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C81626162C87F74300604D27 /* XCRemoteSwiftPackageReference "PythonKit" */;
+			productName = PythonKit;
+		};
 		FEBD6CC02C8772EE00D15960 /* AssetCatalogWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AssetCatalogWrapper;
