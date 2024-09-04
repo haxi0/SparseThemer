@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C81626182C87F74300604D27 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = C81626172C87F74300604D27 /* PythonKit */; };
 		C816261B2C8810D200604D27 /* sparserestore in Resources */ = {isa = PBXBuildFile; fileRef = C81626192C8810D200604D27 /* sparserestore */; };
+		C816261E2C882A5400604D27 /* IPALinkScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C816261D2C882A5400604D27 /* IPALinkScraper.swift */; };
 		FEBD6C8B2C875E2900D15960 /* POColdsdkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */; };
 		FEBD6C8D2C875E2900D15960 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8C2C875E2900D15960 /* ContentView.swift */; };
 		FEBD6C8F2C875E2A00D15960 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEBD6C8E2C875E2A00D15960 /* Assets.xcassets */; };
@@ -40,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		C81626192C8810D200604D27 /* sparserestore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sparserestore; sourceTree = SOURCE_ROOT; };
+		C816261D2C882A5400604D27 /* IPALinkScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPALinkScraper.swift; sourceTree = "<group>"; };
 		FEBD6C872C875E2900D15960 /* POColdsdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = POColdsdk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POColdsdkApp.swift; sourceTree = "<group>"; };
 		FEBD6C8C2C875E2900D15960 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				FEBD6C932C875E2A00D15960 /* POColdsdk.entitlements */,
 				FEBD6C902C875E2A00D15960 /* Preview Content */,
 				FEBD6CBA2C876F4900D15960 /* ThemeV2.swift */,
+				C816261D2C882A5400604D27 /* IPALinkScraper.swift */,
 			);
 			path = POColdsdk;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				FEBD6CBB2C876F4900D15960 /* ThemeV2.swift in Sources */,
 				FEBD6C8D2C875E2900D15960 /* ContentView.swift in Sources */,
 				FEBD6C8B2C875E2900D15960 /* POColdsdkApp.swift in Sources */,
+				C816261E2C882A5400604D27 /* IPALinkScraper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
