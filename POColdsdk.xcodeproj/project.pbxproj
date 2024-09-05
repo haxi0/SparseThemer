@@ -11,7 +11,8 @@
 		C816261B2C8810D200604D27 /* sparserestore in Resources */ = {isa = PBXBuildFile; fileRef = C81626192C8810D200604D27 /* sparserestore */; };
 		C816261E2C882A5400604D27 /* IPALinkScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C816261D2C882A5400604D27 /* IPALinkScraper.swift */; };
 		C81626252C88AA2F00604D27 /* assetsgrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = C81626242C88AA2F00604D27 /* assetsgrabber.m */; };
-		C81626302C88B39E00604D27 /* libpartial.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C816262F2C88B39E00604D27 /* libpartial.a */; };
+		C87BA0872C8971C40026E717 /* libpartial.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C87BA0862C8971C40026E717 /* libpartial.dylib */; };
+		C87BA0892C8972780026E717 /* libpartial.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = C87BA0862C8971C40026E717 /* libpartial.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		FEBD6C8B2C875E2900D15960 /* POColdsdkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */; };
 		FEBD6C8D2C875E2900D15960 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8C2C875E2900D15960 /* ContentView.swift */; };
 		FEBD6C8F2C875E2A00D15960 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEBD6C8E2C875E2A00D15960 /* Assets.xcassets */; };
@@ -41,6 +42,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C87BA0882C89726C0026E717 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C87BA0892C8972780026E717 /* libpartial.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		C81626192C8810D200604D27 /* sparserestore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sparserestore; sourceTree = SOURCE_ROOT; };
 		C816261D2C882A5400604D27 /* IPALinkScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPALinkScraper.swift; sourceTree = "<group>"; };
@@ -48,7 +62,7 @@
 		C81626242C88AA2F00604D27 /* assetsgrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = assetsgrabber.m; sourceTree = "<group>"; };
 		C81626262C88AA3B00604D27 /* POColdsdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "POColdsdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81626272C88B17700604D27 /* assetsgrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = assetsgrabber.h; sourceTree = "<group>"; };
-		C816262F2C88B39E00604D27 /* libpartial.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpartial.a; sourceTree = "<group>"; };
+		C87BA0862C8971C40026E717 /* libpartial.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpartial.dylib; sourceTree = "<group>"; };
 		FEBD6C872C875E2900D15960 /* POColdsdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = POColdsdk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POColdsdkApp.swift; sourceTree = "<group>"; };
 		FEBD6C8C2C875E2900D15960 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -68,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C81626302C88B39E00604D27 /* libpartial.a in Frameworks */,
+				C87BA0872C8971C40026E717 /* libpartial.dylib in Frameworks */,
 				FEBD6CC12C8772EE00D15960 /* AssetCatalogWrapper in Frameworks */,
 				FEBD6CC42C87739A00D15960 /* AssetCatalogWrapper in Frameworks */,
 				C81626182C87F74300604D27 /* PythonKit in Frameworks */,
@@ -95,7 +109,7 @@
 		C81626222C88AA0900604D27 /* libpartial */ = {
 			isa = PBXGroup;
 			children = (
-				C816262F2C88B39E00604D27 /* libpartial.a */,
+				C87BA0862C8971C40026E717 /* libpartial.dylib */,
 				C81626212C88A9F000604D27 /* partial.h */,
 				C81626272C88B17700604D27 /* assetsgrabber.h */,
 				C81626242C88AA2F00604D27 /* assetsgrabber.m */,
@@ -183,6 +197,7 @@
 				FEBD6C832C875E2900D15960 /* Sources */,
 				FEBD6C842C875E2900D15960 /* Frameworks */,
 				FEBD6C852C875E2900D15960 /* Resources */,
+				C87BA0882C89726C0026E717 /* CopyFiles */,
 			);
 			buildRules = (
 			);
