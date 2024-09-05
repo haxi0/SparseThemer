@@ -17,9 +17,11 @@ bool grabAssetsCar(NSString* zipURL, NSString* appName) {
         return false;
     }
     NSData *assetsData = [zip getFileForPath:[NSString stringWithFormat:@"Payload/%@.app/Assets.car", appName] error:&error];
-    NSString *outPath = [NSString stringWithFormat:@"./%@_ORIGINAL_ASSETS", appName];
+    NSString* bundlePath = [[NSBundle mainBundle] resourcePath];
+    NSString *outPath = [NSString stringWithFormat:@"%@/assetbackups/%@_ORIGINAL_ASSETS.car", bundlePath, appName];
+    NSLog(@"outPath: %@", outPath);
     if (![assetsData writeToFile:outPath options:NSDataWritingAtomic error:&error]) {
-        NSLog(@"Failed to write kernelcache to %s! %s\n", outPath.UTF8String, error.localizedDescription.UTF8String);
+        NSLog(@"Failed to write assets to %s! %s\n", outPath.UTF8String, error.localizedDescription.UTF8String);
         return false;
     }
     return true;

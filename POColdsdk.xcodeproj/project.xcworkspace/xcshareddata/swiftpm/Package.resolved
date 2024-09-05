@@ -1,6 +1,24 @@
 {
-  "originHash" : "98dc8886cc709dc8f9539eb87d21c323a35194ef713d8dd5ec8a698d55bdf518",
+  "originHash" : "88573ad52e271862b2c661026801f3cbc914994bc6d11cbdd818faa5892ddc1b",
   "pins" : [
+    {
+      "identity" : "keychain-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/evgenyneu/keychain-swift",
+      "state" : {
+        "revision" : "5e1b02b6a9dac2a759a1d5dbc175c86bd192a608",
+        "version" : "24.0.0"
+      }
+    },
+    {
+      "identity" : "macos-mac-address",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ivanmoskalev/macos-mac-address",
+      "state" : {
+        "revision" : "c228e5f38000929b88db9344920ba5151f9aa2a6",
+        "version" : "1.2.0"
+      }
+    },
     {
       "identity" : "privatekits",
       "kind" : "remoteSourceControl",

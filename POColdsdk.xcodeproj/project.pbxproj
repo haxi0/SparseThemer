@@ -8,11 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		C81626182C87F74300604D27 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = C81626172C87F74300604D27 /* PythonKit */; };
-		C816261B2C8810D200604D27 /* sparserestore in Resources */ = {isa = PBXBuildFile; fileRef = C81626192C8810D200604D27 /* sparserestore */; };
 		C816261E2C882A5400604D27 /* IPALinkScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C816261D2C882A5400604D27 /* IPALinkScraper.swift */; };
 		C81626252C88AA2F00604D27 /* assetsgrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = C81626242C88AA2F00604D27 /* assetsgrabber.m */; };
 		C87BA0872C8971C40026E717 /* libpartial.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C87BA0862C8971C40026E717 /* libpartial.dylib */; };
 		C87BA0892C8972780026E717 /* libpartial.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = C87BA0862C8971C40026E717 /* libpartial.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		C87BA08C2C897B770026E717 /* sparserestore in Resources */ = {isa = PBXBuildFile; fileRef = C87BA08B2C897B770026E717 /* sparserestore */; };
+		C87BA08E2C897B7C0026E717 /* assetbackups in Resources */ = {isa = PBXBuildFile; fileRef = C87BA08D2C897B7C0026E717 /* assetbackups */; };
+		C87BA0912C899AC30026E717 /* MacAddress in Frameworks */ = {isa = PBXBuildFile; productRef = C87BA0902C899AC30026E717 /* MacAddress */; };
+		C87BA0942C89A20F0026E717 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C87BA0932C89A20F0026E717 /* KeychainSwift */; };
 		FEBD6C8B2C875E2900D15960 /* POColdsdkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */; };
 		FEBD6C8D2C875E2900D15960 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6C8C2C875E2900D15960 /* ContentView.swift */; };
 		FEBD6C8F2C875E2A00D15960 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEBD6C8E2C875E2A00D15960 /* Assets.xcassets */; };
@@ -56,13 +59,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C81626192C8810D200604D27 /* sparserestore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sparserestore; sourceTree = SOURCE_ROOT; };
 		C816261D2C882A5400604D27 /* IPALinkScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPALinkScraper.swift; sourceTree = "<group>"; };
 		C81626212C88A9F000604D27 /* partial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = partial.h; sourceTree = "<group>"; };
 		C81626242C88AA2F00604D27 /* assetsgrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = assetsgrabber.m; sourceTree = "<group>"; };
 		C81626262C88AA3B00604D27 /* POColdsdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "POColdsdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81626272C88B17700604D27 /* assetsgrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = assetsgrabber.h; sourceTree = "<group>"; };
 		C87BA0862C8971C40026E717 /* libpartial.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpartial.dylib; sourceTree = "<group>"; };
+		C87BA08B2C897B770026E717 /* sparserestore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sparserestore; sourceTree = "<group>"; };
+		C87BA08D2C897B7C0026E717 /* assetbackups */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assetbackups; sourceTree = "<group>"; };
 		FEBD6C872C875E2900D15960 /* POColdsdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = POColdsdk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POColdsdkApp.swift; sourceTree = "<group>"; };
 		FEBD6C8C2C875E2900D15960 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -82,6 +86,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C87BA0942C89A20F0026E717 /* KeychainSwift in Frameworks */,
+				C87BA0912C899AC30026E717 /* MacAddress in Frameworks */,
 				C87BA0872C8971C40026E717 /* libpartial.dylib in Frameworks */,
 				FEBD6CC12C8772EE00D15960 /* AssetCatalogWrapper in Frameworks */,
 				FEBD6CC42C87739A00D15960 /* AssetCatalogWrapper in Frameworks */,
@@ -148,8 +154,9 @@
 		FEBD6C892C875E2900D15960 /* POColdsdk */ = {
 			isa = PBXGroup;
 			children = (
+				C87BA08D2C897B7C0026E717 /* assetbackups */,
+				C87BA08B2C897B770026E717 /* sparserestore */,
 				C81626222C88AA0900604D27 /* libpartial */,
-				C81626192C8810D200604D27 /* sparserestore */,
 				FEBD6C8A2C875E2900D15960 /* POColdsdkApp.swift */,
 				FEBD6C8C2C875E2900D15960 /* ContentView.swift */,
 				C81626262C88AA3B00604D27 /* POColdsdk-Bridging-Header.h */,
@@ -208,6 +215,8 @@
 				FEBD6CC02C8772EE00D15960 /* AssetCatalogWrapper */,
 				FEBD6CC32C87739A00D15960 /* AssetCatalogWrapper */,
 				C81626172C87F74300604D27 /* PythonKit */,
+				C87BA0902C899AC30026E717 /* MacAddress */,
+				C87BA0932C89A20F0026E717 /* KeychainSwift */,
 			);
 			productName = POColdsdk;
 			productReference = FEBD6C872C875E2900D15960 /* POColdsdk.app */;
@@ -285,6 +294,8 @@
 			packageReferences = (
 				FEBD6CC22C87739A00D15960 /* XCRemoteSwiftPackageReference "PrivateKits" */,
 				C81626162C87F74300604D27 /* XCRemoteSwiftPackageReference "PythonKit" */,
+				C87BA08F2C899AC30026E717 /* XCRemoteSwiftPackageReference "macos-mac-address" */,
+				C87BA0922C89A20F0026E717 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			productRefGroup = FEBD6C882C875E2900D15960 /* Products */;
 			projectDirPath = "";
@@ -303,7 +314,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FEBD6C922C875E2A00D15960 /* Preview Assets.xcassets in Resources */,
-				C816261B2C8810D200604D27 /* sparserestore in Resources */,
+				C87BA08E2C897B7C0026E717 /* assetbackups in Resources */,
+				C87BA08C2C897B770026E717 /* sparserestore in Resources */,
 				FEBD6C8F2C875E2A00D15960 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -673,6 +685,22 @@
 				kind = branch;
 			};
 		};
+		C87BA08F2C899AC30026E717 /* XCRemoteSwiftPackageReference "macos-mac-address" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ivanmoskalev/macos-mac-address";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+		C87BA0922C89A20F0026E717 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
 		FEBD6CC22C87739A00D15960 /* XCRemoteSwiftPackageReference "PrivateKits" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/NSAntoine/PrivateKits.git";
@@ -688,6 +716,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C81626162C87F74300604D27 /* XCRemoteSwiftPackageReference "PythonKit" */;
 			productName = PythonKit;
+		};
+		C87BA0902C899AC30026E717 /* MacAddress */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C87BA08F2C899AC30026E717 /* XCRemoteSwiftPackageReference "macos-mac-address" */;
+			productName = MacAddress;
+		};
+		C87BA0932C89A20F0026E717 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C87BA0922C89A20F0026E717 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
 		};
 		FEBD6CC02C8772EE00D15960 /* AssetCatalogWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
