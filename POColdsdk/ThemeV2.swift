@@ -57,7 +57,7 @@ class Restore {
     }
     func PerformRestore(appPath: String, carAssets: String) {
         let restorer = Python.import("restorer")
-        restorer.restore_assets(appPath.appending("/Assets.car"), carAssets)
+        restorer.restore_assets(appPath, carAssets)
     }
     func getApps() -> Dictionary<String, String> {
         let restorer = Python.import("restorer")

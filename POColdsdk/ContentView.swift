@@ -56,7 +56,7 @@ struct ContentView: View {
                             print("[*] Replacing icons with selected png")
                             do {
                                 try themer.replaceIcons(icon: selectedPng!, car: Bundle.main.resourceURL!.appendingPathComponent("assetbackups/RedditApp_ORIGINAL_ASSETS.car"))
-                                restore.PerformRestore(appPath: redditPath.replacingOccurrences(of: "/private", with: ""), carAssets: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp_ORIGINAL_ASSETS.car"))
+                                restore.PerformRestore(appPath: "RedditApp.app", carAssets: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp_ORIGINAL_ASSETS.car"))
                             } catch {
                                 print("[!] Failed to patch assets")
                             }
