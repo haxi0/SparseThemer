@@ -38,10 +38,6 @@ struct ContentView: View {
     let ipatool = IPATool.shared
     var body: some View {
         VStack {
-            Button("Automated Apps Patching (RISKY!)") {
-                print("[*] Start")
-            }
-            
             Button("Automated Reddit Patch (PLIST)") {
                 print("[*] Start")
                 
@@ -148,13 +144,12 @@ struct ContentView: View {
                     print("[!] getApps is empty.")
                 }
             }
-            
-            
             .bold()
             
             Button("Select .car & .png") {
                 isFileImporterPresented = true
             }
+            /*
             Button("Replace Images") {
                 do {
                     try themer.replaceIcons(icon: selectedPng!, car: selectedCar!)
@@ -165,6 +160,7 @@ struct ContentView: View {
             Button("Try restoring") {
                 //no
             }
+             */
             Button("Get apps") {
                 apps = restore.getApps()
             }
