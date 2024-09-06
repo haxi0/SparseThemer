@@ -44,13 +44,13 @@ class IPATool {
     static var shared = IPATool()
     static var dirPath = Bundle.main.path(forResource: "assetgrabber/ipatool-py", ofType:nil)!
     init() {
-        sys.argv = []
         sys.path.append(IPATool.dirPath)
-        sys.argv.append("--json")
-        sys.argv.append("lookup")
     }
     func getIPALinks(bundleID: String, username: String, password: String) -> String {
         let restorer = Python.import("main")
+        sys.argv = []
+        sys.argv.append("--json")
+        sys.argv.append("lookup")
         sys.argv.append("--bundle-id")
         sys.argv.append(bundleID)
         sys.argv.append("-c")
@@ -60,14 +60,17 @@ class IPATool {
         sys.argv.append(username)
         sys.argv.append("--password")
         sys.argv.append(password)
-//        -b com.reddit.Reddit -c US download --appleid 'leonghongkit@gmail.com' -p ''
-        do {
-            return try parseJSONAndGetDownloadLink(jsonString: String(restorer.main().throwing.dynamicallyCall(withArguments: []))!) ?? "N/A"
-        } catch {
-            print(error)
-            print("Enter password again with 2fa")
-        }
-        return "N/A"
+//        --json lookup -b com.reddit.Reddit -c US download --appleid 'leonghongkit@gmail.com' -p ''
+//        do {
+//            return try parseJSONAndGetDownloadLink(jsonString: String(restorer.main().throwing.dynamicallyCall(withArguments: []))!) ?? "N/A"
+//        } catch {
+//            print(error)
+//            print("Enter password again with 2fa")
+//        }
+//        return "N/A"
+        return parseJSONAndGetDownloadLink(jsonString: String(restorer.main())!)!
+//        print(restorer.main())
+//        return String(restorer.main())!
     }
 //        .from_env.throwing.dynamicallyCall(withArguments: [])
 }

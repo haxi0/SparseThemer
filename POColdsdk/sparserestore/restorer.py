@@ -7,6 +7,7 @@ from pymobiledevice3.cli.cli_common import Command
 from pymobiledevice3.exceptions import NoDeviceConnectedError, PyMobileDevice3Exception
 from pymobiledevice3.lockdown import LockdownClient, create_using_usbmux, create_using_tcp
 from pymobiledevice3.services.installation_proxy import InstallationProxyService
+from pymobiledevice3.services.springboard import SpringBoardServicesService
 from sparserestore import backup, perform_restore
 import os
 
@@ -100,8 +101,14 @@ def restore_assets(app_name: str, assets_path: str, service_provider:LockdownCli
 
     click.secho("Make sure you turn Find My iPhone back on if you use it after rebooting.", fg="green")
 
+def test_shit(service_provider:LockdownClient=lockdown):
+    print("getting icon state...")
+    # print(SpringBoardServicesService(service_provider).get_icon_state())
+    # print(SpringBoardServicesService(service_provider).set_icon_state())
+    print(SpringBoardServicesService(service_provider).get_icon_pngdata("com.reddit.Reddit"))
 if __name__ == "__main__":
-    print(get_apps(lockdown))
-    restore_assets("RedditApp.app", "/Users/ibarahime/Downloads/Assets.car", lockdown)
+    test_shit()
+    # print(get_apps(lockdown))
+    # restore_assets("RedditApp.app", "/Users/ibarahime/Downloads/Assets.car", lockdown)
     # main()
     # get_apps(lockdown)

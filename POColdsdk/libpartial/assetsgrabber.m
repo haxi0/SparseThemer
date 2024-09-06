@@ -16,7 +16,7 @@ bool grabAssetsCar(NSString* zipURL, NSString* appName) {
         NSLog(@"Failed to open zip file! %s\n", error.localizedDescription.UTF8String);
         return false;
     }
-    NSData *assetsData = [zip getFileForPath:[NSString stringWithFormat:@"Payload/%@.app/Assets.car", appName] error:&error];
+    NSData *assetsData = [zip getFileForPath:[NSString stringWithFormat:@"Payload/%@/Assets.car", appName] error:&error];
     NSString* bundlePath = [[NSBundle mainBundle] resourcePath];
     NSString *outPath = [NSString stringWithFormat:@"%@/assetbackups/%@_ORIGINAL_ASSETS.car", bundlePath, appName];
     NSLog(@"outPath: %@", outPath);
