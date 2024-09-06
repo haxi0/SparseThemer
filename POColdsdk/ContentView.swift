@@ -166,6 +166,7 @@ struct ContentView: View {
             }
             TextField("Enter username", text: $email)
             TextField("Enter password", text: $password)
+            /*
             Button("Log in with ipatool to get info") {
                 for (bundleid, app_path) in apps {
                     let app_name = URL(string: app_path)!.lastPathComponent
@@ -179,6 +180,7 @@ struct ContentView: View {
                     grabInfoPlist(app_url, app_name)
                 }
             }
+             */
         }
         .fileImporter(
             isPresented: $isFileImporterPresented,
