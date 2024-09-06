@@ -7,6 +7,25 @@
 
 import SwiftUI
 
+func parseAppsOutput(_ output: String) -> [String: String]? {
+    var result: [String: String] = [:]
+    
+    // Removing brackets and splitting the entries
+    let entries = output.trimmingCharacters(in: CharacterSet(charactersIn: "[]")).components(separatedBy: ", ")
+    
+    // Iterating over each entry to split key-value pairs
+    for entry in entries {
+        let pair = entry.components(separatedBy: ": ")
+        if pair.count == 2 {
+            let key = pair[0].trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+            let value = pair[1].trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+            result[key] = value
+        }
+    }
+    
+    return result
+}
+
 struct ContentView: View {
     @State private var isFileImporterPresented = false
     @State private var selectedCar: URL? = nil
@@ -22,22 +41,34 @@ struct ContentView: View {
             Button("Automated Reddit Patch") {
                 print("[*] Start")
                 
-                if !restore.getApps().isEmpty {
+                // Assuming restore.getApps() returns a Dictionary<String, String>
+                let appsDictionary = restore.getApps()
+
+                if !appsDictionary.isEmpty {
                     print("[*] Downloading .car")
                     
-                    // TODO: Unhardcode :troll:
-                    if grabAssetsCar("https://iosapps.itunes.apple.com/itunes-assets/Purple211/v4/64/21/81/64218131-c1b9-1997-db1d-77c6b1137ffb/extDirgkfjetjcgxeyfbkm.lc.32375868113064696.D6OUVIFQ2FQCA.signed.dpkg.ipa?accessKey=1725657396_7823640340818317029_qnA4o3IYxtaWP6UhOExbFy92AgVGw64gXs9c2fEPljbfkicYPjMLvsJ8t9pUy5jEGu2Mm%2FJMXJCEJKk5XI4Kx9VeL0nhwojUHuYS9aewiqNUmgbQzAnqbiwcoHYwmuI78xC6VsO3wIBmPCR4c3WO66urukVuqYU6mTn0IVcjlSl8u2hoMeeyK16yCs4CeSAl%2F4g%2Bs%2BW3jwCIR6OFzXoJFUG5%2FDP7TW4c%2F732HebNNcgHxWP819CaNXLfjzh7BRI7", "RedditApp") {
-                        print("[*] Replacing with icons with selected png")
-                        do {
-                            try themer.replaceIcons(icon: selectedPng!, car: Bundle.main.resourceURL!.appendingPathComponent("assetbackups/RedditApp_ORIGINAL_ASSETS.car"))
-                        } catch {
-                            print("[!] Failed to patch assets")
+                    // Get the path for "com.reddit.Reddit"
+                    if let redditPath = appsDictionary["com.reddit.Reddit"] {
+                        print("[*] RedditApp path: \(redditPath)")
+
+                        // TODO: Unhardcode :troll:
+                        if grabAssetsCar("https://iosapps.itunes.apple.com/itunes-assets/Purple211/v4/64/21/81/64218131-c1b9-1997-db1d-77c6b1137ffb/extDirgkfjetjcgxeyfbkm.lc.32375868113064696.D6OUVIFQ2FQCA.signed.dpkg.ipa?accessKey=1725657396_7823640340818317029_qnA4o3IYxtaWP6UhOExbFy92AgVGw64gXs9c2fEPljbfkicYPjMLvsJ8t9pUy5jEGu2Mm%2FJMXJCEJKk5XI4Kx9VeL0nhwojUHuYS9aewiqNUmgbQzAnqbiwcoHYwmuI78xC6VsO3wIBmPCR4c3WO66urukVuqYU6mTn0IVcjlSl8u2hoMeeyK16yCs4CeSAl%2F4g%2Bs%2BW3jwCIR6OFzXoJFUG5%2FDP7TW4c%2F732HebNNcgHxWP819CaNXLfjzh7BRI7", "RedditApp") {
+                            print("[*] Replacing icons with selected png")
+                            do {
+                                try themer.replaceIcons(icon: selectedPng!, car: Bundle.main.resourceURL!.appendingPathComponent("assetbackups/RedditApp_ORIGINAL_ASSETS.car"))
+                                restore.PerformRestore(appPath: redditPath, carAssets: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp_ORIGINAL_ASSETS.car"))
+                            } catch {
+                                print("[!] Failed to patch assets")
+                            }
                         }
+                    } else {
+                        print("[!] com.reddit.Reddit path not found")
                     }
                 } else {
                     print("[!] getApps is empty")
                 }
             }
+
             .bold()
             Button("Select .car & .png") {
                 isFileImporterPresented = true
@@ -50,7 +81,7 @@ struct ContentView: View {
                 }
             }
             Button("Try restoring") {
-                restore.PerformRestore()
+                //no
             }
             Button("Get apps") {
                 apps = restore.getApps()
