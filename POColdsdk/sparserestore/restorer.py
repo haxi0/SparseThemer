@@ -50,7 +50,7 @@ def get_apps(service_provider: LockdownClient=lockdown):
             apps[value["CFBundleIdentifier"]] = value["Path"]
     return apps
 
-def restore_assets(app_path: str, assets_path: str, service_provider:LockdownClient=lockdown,) -> None:
+def restore_assets(app_path: str, assets_path: str, service_provider:LockdownClient=lockdown) -> None:
     device_class = service_provider.get_value(key="DeviceClass")
     device_build = service_provider.get_value(key="BuildVersion")
     device_version = parse_version(service_provider.product_version)
