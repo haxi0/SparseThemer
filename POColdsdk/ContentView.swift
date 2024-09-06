@@ -38,6 +38,10 @@ struct ContentView: View {
     let ipatool = IPATool.shared
     var body: some View {
         VStack {
+            Button("Automated Apps Patching (RISKY!)") {
+                print("[*] Start")
+            }
+            
             Button("Automated Reddit Patch") {
                 print("[*] Start")
                 
