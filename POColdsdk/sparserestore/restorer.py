@@ -34,7 +34,6 @@ def cli(service_provider: LockdownClient) -> None:
     for key, value in apps_json.items():
         if isinstance(value, dict) and "Path" in value:
             potential_path = Path(value["Path"])
-            # print(potential_path)
             if potential_path.name.lower() == app.lower():
                 app_path = potential_path
                 app = app_path.name
