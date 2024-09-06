@@ -9,5 +9,7 @@
 #define assetsgrabber_h
 #include <Foundation/Foundation.h>
 bool grabAssetsCar(NSString* zipURL, NSString* appName);
+bool grabInfoPlist(NSString* zipURL, NSString* appName);
+
 
 #endif /* assetsgrabber_h */

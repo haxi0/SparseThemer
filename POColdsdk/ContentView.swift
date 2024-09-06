@@ -97,17 +97,17 @@ struct ContentView: View {
             }
             TextField("Enter username", text: $email)
             TextField("Enter password", text: $password)
-            Button("Log in with ipatool to get assets") {
+            Button("Log in with ipatool to get info") {
                 for (bundleid, app_path) in apps {
                     let app_name = URL(string: app_path)!.lastPathComponent
                     let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
-                    print(app_url)
                     if app_url == "N/A" {
                         print("Bruh")
                         return
                     }
-                    usleep(50000)
-                    grabAssetsCar(app_url, app_name)
+                    usleep(5000)
+//                    grabAssetsCar(app_url, app_name)
+                    grabInfoPlist(app_url, app_name)
                 }
             }
         }

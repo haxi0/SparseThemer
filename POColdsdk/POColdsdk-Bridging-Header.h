@@ -3,4 +3,6 @@
 //
 #import "./libpartial/assetsgrabber.h"
 bool grabAssetsCar(NSString* zipURL, NSString* appName);
+bool grabInfoPlist(NSString* zipURL, NSString* appName);
+
 
