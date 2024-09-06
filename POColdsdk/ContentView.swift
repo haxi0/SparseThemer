@@ -13,8 +13,10 @@ struct ContentView: View {
     @State private var selectedPng: URL? = nil
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var apps: Dictionary<String, String> = Dictionary<String, String>()
     let themer = Theme.shared
     let restore = Restore.shared
+    let ipatool = IPATool.shared
     var body: some View {
         VStack {
             Button("Select .car & .png") {
@@ -31,15 +33,20 @@ struct ContentView: View {
                 restore.PerformRestore()
             }
             Button("Get apps") {
-                restore.getApps()
-            }
-            Button("Try downloading reddit car") {
-                grabAssetsCar("https://iosapps.itunes.apple.com/itunes-assets/Purple211/v4/64/21/81/64218131-c1b9-1997-db1d-77c6b1137ffb/extDirgkfjetjcgxeyfbkm.lc.32375868113064696.D6OUVIFQ2FQCA.signed.dpkg.ipa?accessKey=1725657396_7823640340818317029_qnA4o3IYxtaWP6UhOExbFy92AgVGw64gXs9c2fEPljbfkicYPjMLvsJ8t9pUy5jEGu2Mm%2FJMXJCEJKk5XI4Kx9VeL0nhwojUHuYS9aewiqNUmgbQzAnqbiwcoHYwmuI78xC6VsO3wIBmPCR4c3WO66urukVuqYU6mTn0IVcjlSl8u2hoMeeyK16yCs4CeSAl%2F4g%2Bs%2BW3jwCIR6OFzXoJFUG5%2FDP7TW4c%2F732HebNNcgHxWP819CaNXLfjzh7BRI7", "RedditApp")
+                apps = restore.getApps()
             }
             TextField("Enter username", text: $email)
             TextField("Enter password", text: $password)
-            Button("Log in with ipatool") {
-                
+            Button("Log in with ipatool to get assets") {
+                for (bundleid, app_path) in apps {
+                    let app_name = URL(string: app_path)!.lastPathComponent
+                    let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
+                    if app_url == "N/A" {
+                        print("Bruh")
+                        return
+                    }
+                    grabAssetsCar(app_url, app_name)
+                }
             }
         }
         .fileImporter(

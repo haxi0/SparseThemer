@@ -4,33 +4,70 @@
 //
 //  Created by LL on 9/4/24.
 //
-// Everything here is taken from ipatool.
 import Foundation
-
-// https://github.com/majd/ipatool/blob/63ee6fc6a42a89d51c9caac632cefd65218825ab/pkg/appstore/constants.go#L21
-
-struct iTunesConstants {
-    var FailureTypeInvalidCredentials     = "-5000"
-    var FailureTypePasswordTokenExpired   = "2034"
-    var FailureTypeLicenseNotFound        = "9610"
-    var FailureTypeTemporarilyUnavailable = "2059"
-    var CustomerMessageBadLogin             = "MZFinance.BadLogin.Configurator_message"
-    var CustomerMessageSubscriptionRequired = "Subscription Required"
-    var iTunesAPIDomain     = "itunes.apple.com"
-    var iTunesAPIPathSearch = "/search"
-    var iTunesAPIPathLookup = "/lookup"
-    var PrivateAppStoreAPIDomainPrefixWithoutAuthCode = "p25"
-    var PrivateAppStoreAPIDomainPrefixWithAuthCode    = "p71"
-    var PrivateAppStoreAPIDomain                      = "buy.itunes.apple.com"
-    var PrivateAppStoreAPIPathAuthenticate            = "/WebObjects/MZFinance.woa/wa/authenticate"
-    var PrivateAppStoreAPIPathPurchase                = "/WebObjects/MZBuy.woa/wa/buyProduct"
-    var PrivateAppStoreAPIPathDownload                = "/WebObjects/MZFinance.woa/wa/volumeStoreDownloadProduct"
-    var HTTPHeaderStoreFront = "X-Set-Apple-Store-Front"
-    var PricingParameterAppStore    = "STDQ"
-    var PricingParameterAppleArcade = "GAME"
-}
-
+import PythonKit
 // Idea: We have a list of all our user apps. Get their bundle id, then search up their download links.
 // After that, use pzb to get their assets.car.
 // Store the original as hashmap<bundleid, <bundleid>_original_assets.car>
 // Make a new copy with hashmap<bundleid, <bundleid>_TWEAKED_assets.car>
+
+//ipatool.py --json lookup -b com.reddit.Reddit -c US download  --appleid 'appleid' -p 'password' -> this will error out the first time, get the user to enter the 2fa code -> -p 'password'+'2fa'
+struct AppInfo: Codable {
+    let appName: String
+    let appBundleId: String
+    let downloadURL: String
+}
+
+func parseJSONAndGetDownloadLink(jsonString: String) -> String? {
+    // Convert the JSON string to Data
+    guard let jsonData = jsonString.data(using: .utf8) else {
+        print("Failed to convert string to data")
+        return nil
+    }
+    
+    // Create a JSONDecoder instance
+    let decoder = JSONDecoder()
+    
+    do {
+        // Attempt to decode the JSON data into our AppInfo struct
+        let appInfo = try decoder.decode(AppInfo.self, from: jsonData)
+        
+        // Return the download URL
+        return appInfo.downloadURL
+    } catch {
+        print("Error decoding JSON: \(error)")
+        return nil
+    }
+}
+
+class IPATool {
+    static var shared = IPATool()
+    static var dirPath = Bundle.main.path(forResource: "assetgrabber/ipatool-py", ofType:nil)!
+    init() {
+        sys.argv = []
+        sys.path.append(IPATool.dirPath)
+        sys.argv.append("--json")
+        sys.argv.append("lookup")
+    }
+    func getIPALinks(bundleID: String, username: String, password: String) -> String {
+        let restorer = Python.import("main")
+        sys.argv.append("--bundle-id")
+        sys.argv.append(bundleID)
+        sys.argv.append("-c")
+        sys.argv.append(NSLocale.current.region!.identifier)
+        sys.argv.append("download")
+        sys.argv.append("--appleid")
+        sys.argv.append(username)
+        sys.argv.append("--password")
+        sys.argv.append(password)
+//        -b com.reddit.Reddit -c US download --appleid 'leonghongkit@gmail.com' -p ''
+        do {
+            return try parseJSONAndGetDownloadLink(jsonString: String(restorer.main().throwing.dynamicallyCall(withArguments: []))!) ?? "N/A"
+        } catch {
+            print(error)
+            print("Enter password again with 2fa")
+        }
+        return "N/A"
+    }
+//        .from_env.throwing.dynamicallyCall(withArguments: [])
+}
