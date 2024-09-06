@@ -1,0 +1,3 @@
+[submodule "POColdsdk/assetgrabber/ipatool-py"]
+	path = POColdsdk/assetgrabber/ipatool-py
+	url = https://github.com/hrtowii/ipatool-py
