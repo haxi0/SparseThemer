@@ -54,7 +54,7 @@ class IPATool {
         sys.argv.append("--bundle-id")
         sys.argv.append(bundleID)
         sys.argv.append("-c")
-        sys.argv.append("RU")
+        sys.argv.append("SG")
         sys.argv.append("download")
         sys.argv.append("--appleid")
         sys.argv.append(username)

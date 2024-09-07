@@ -52,12 +52,15 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if !email.isEmpty && !password.isEmpty && !((selectedPng?.description.isEmpty) == nil) {
-                Button("AUTOMATED ALL APPS PATCH (RISKY!!!)") {
-                    print("[*] Okay.. Here we go. You're on your own now.")
+                Button("AUTOMATED ALL APPS PATCH (CAR, RISKY!!!)") {
+                    print("[*] Okay... Here we go. You're on your own now.")
                     
+                    // Assuming restore.getApps() returns a Dictionary<String, String>
                     let appsDictionary = restore.getApps()
                     
                     if !appsDictionary.isEmpty {
+                        print("[*] Downloading .car files for all apps.")
+                        
                         for (bundleid, app_path) in appsDictionary {
                             let app_name = URL(string: app_path)!.lastPathComponent
                             let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
@@ -69,10 +72,46 @@ struct ContentView: View {
                             //                    grabAssetsCar(app_url, app_name)
                             grabAssetsCar(app_url, app_name)
                         }
+                        
+                        for (bundleID, appPath) in appsDictionary {
+                            print("[*] Processing app: \(bundleID)")
+
+                            let appName = URL(fileURLWithPath: appPath).lastPathComponent
+                            let appBackupPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(appName)_ORIGINAL_ASSETS.car")
+
+                            print("[*] App name: \(appName)")
+                            print("[*] Backup path: \(appBackupPath)")
+
+                            if FileManager.default.fileExists(atPath: appBackupPath.path) {
+                                print("[*] Found backup file: \(appBackupPath.path)")
+
+                                let iconFileName = "\(bundleID)-large.png"
+                                let iconPath = Bundle.main.resourceURL!.appendingPathComponent(iconFileName)
+
+                                if FileManager.default.fileExists(atPath: iconPath.path) {
+                                    print("[*] Replacing icons with \(iconFileName)")
+
+                                    do {
+                                        try themer.replaceIcons(icon: iconPath, car: appBackupPath)
+                                        restore.PerformRestoreCar(appPath: appName, car: appBackupPath.path)
+                                        print("[*] Patched assets for \(bundleID).")
+                                    } catch {
+                                        print("[!] Failed to patch assets for \(bundleID). Error: \(error)")
+                                    }
+                                } else {
+                                    print("[!] Icon file \(iconFileName) not found.")
+                                }
+                            } else {
+                                print("[!] No backup file found for \(bundleID).")
+                            }
+                        }
+                    } else {
+                        print("[!] getApps is empty.")
                     }
                 }
                 .padding()
                 .bold()
+                
                 Button("Automated Reddit Patch (PLIST)") {
                     print("[*] Start")
                     
@@ -222,16 +261,16 @@ struct ContentView: View {
                 isFileImporterPresented = true
             }
             /*
-            Button("Replace Images") {
-                do {
-                    try themer.replaceIcons(icon: selectedPng!, car: selectedCar!)
-                } catch {
-                    print("kys")
-                }
-            }
-            Button("Try restoring") {
-                //no
-            }
+             Button("Replace Images") {
+             do {
+             try themer.replaceIcons(icon: selectedPng!, car: selectedCar!)
+             } catch {
+             print("kys")
+             }
+             }
+             Button("Try restoring") {
+             //no
+             }
              */
             Button("Get apps") {
                 apps = restore.getApps()
@@ -239,19 +278,19 @@ struct ContentView: View {
             TextField("Enter username", text: $email)
             TextField("Enter password", text: $password)
             /*
-            Button("Log in with ipatool to get info") {
-                for (bundleid, app_path) in apps {
-                    let app_name = URL(string: app_path)!.lastPathComponent
-                    let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
-                    if app_url == "N/A" {
-                        print("Bruh")
-                        return
-                    }
-                    usleep(5000)
-                    //                    grabAssetsCar(app_url, app_name)
-                    grabInfoPlist(app_url, app_name)
-                }
-            }
+             Button("Log in with ipatool to get info") {
+             for (bundleid, app_path) in apps {
+             let app_name = URL(string: app_path)!.lastPathComponent
+             let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
+             if app_url == "N/A" {
+             print("Bruh")
+             return
+             }
+             usleep(5000)
+             //                    grabAssetsCar(app_url, app_name)
+             grabInfoPlist(app_url, app_name)
+             }
+             }
              */
         }
         .fileImporter(
