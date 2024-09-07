@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Foundation
+import AppKit
 
 func parseAppsOutput(_ output: String) -> [String: String]? {
     var result: [String: String] = [:]
@@ -26,6 +28,17 @@ func parseAppsOutput(_ output: String) -> [String: String]? {
     return result
 }
 
+func resizeImage(image: NSImage, targetSize: NSSize) -> NSImage? {
+    let newImage = NSImage(size: targetSize)
+    newImage.lockFocus()
+    image.draw(in: NSRect(origin: .zero, size: targetSize),
+               from: NSRect(origin: .zero, size: image.size),
+               operation: .sourceOver,
+               fraction: 1.0)
+    newImage.unlockFocus()
+    return newImage
+}
+
 struct ContentView: View {
     @State private var isFileImporterPresented = false
     @State private var selectedCar: URL? = nil
@@ -38,6 +51,9 @@ struct ContentView: View {
     let ipatool = IPATool.shared
     var body: some View {
         VStack {
+            Button("a") {
+                print(Bundle.main.resourceURL!.appendingPathComponent("RedditApp.app_icon.car"))
+            }
             Button("Automated Reddit Patch (PLIST)") {
                 print("[*] Start")
                 
@@ -45,6 +61,9 @@ struct ContentView: View {
                 
                 if !appsDictionary.isEmpty {
                     if let redditPath = appsDictionary["com.reddit.Reddit"] {
+                        let lastPathComponent = (redditPath as NSString).lastPathComponent
+                        print("[*] Last path component: \(lastPathComponent)")
+                        
                         print("[*] Downloading Info.plist")
                         
                         let app_name = "RedditApp.app"
@@ -68,9 +87,9 @@ struct ContentView: View {
                             if var iconsDict = plist["CFBundleIcons"] as? [String: Any],
                                var primaryIconDict = iconsDict["CFBundlePrimaryIcon"] as? [String: Any] {
                                 
-                                primaryIconDict["CFBundleIconName"] = "icon"
+                                primaryIconDict.removeValue(forKey: "CFBundleIconName")
                                 
-                                primaryIconDict["CFBundleIconFiles"] = ["icon", "icon@2x", "icon@3x"]
+                                primaryIconDict["CFBundleIconFiles"] = ["icon.png", "icon@2x.png", "icon@3x.png"]
                                 
                                 iconsDict["CFBundlePrimaryIcon"] = primaryIconDict
                                 plist["CFBundleIcons"] = iconsDict
@@ -88,15 +107,48 @@ struct ContentView: View {
                             print("[!] Failed to load the plist file.")
                         }
                         
-                        print("[*] Start Copying Icons")
-                        // idk if you should resize them but im lazy to do that
-                        let lastPathComponent = (redditPath as NSString).lastPathComponent
-                        print("[*] Last path component: \(lastPathComponent)")
+                        print("[*] Resizing Icons")
+                        // Maybe move do to the beginning of the function?
+                        do {
+                            let fileManager = FileManager.default
+                            
+                            // Copy items to the backup directory
+                            try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
+                            try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
+                            try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
+                            
+                            // Load the original image
+                            if let originalImage = NSImage(contentsOf: selectedPng!) {
+                                // Resize images
+                                let icon = resizeImage(image: originalImage, targetSize: NSSize(width: 60, height: 60))
+                                let icon2x = resizeImage(image: originalImage, targetSize: NSSize(width: 120, height: 120))
+                                let icon3x = resizeImage(image: originalImage, targetSize: NSSize(width: 180, height: 180))
+                                
+                                // Save resized images to the respective paths
+                                if let iconData = icon?.tiffRepresentation,
+                                   let icon2xData = icon2x?.tiffRepresentation,
+                                   let icon3xData = icon3x?.tiffRepresentation {
+                                   
+                                    try iconData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
+                                    try icon2xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
+                                    try icon3xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
+                                    
+                                    print("[*] Icons resized successfully.")
+                                } else {
+                                    print("[*] Failed to convert images to data.")
+                                }
+                            } else {
+                                print("[*] Failed to load original image.")
+                            }
+                        } catch {
+                            print("[*] Failed to resize icons. Error: \(error)")
+                        }
                         
+                        print("[*] Start Copying Icons")
                         restore.PerformRestorePlist(appPath: lastPathComponent, infoPlist: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_INFO.plist"))
-                        restore.PerformRestoreIcons(appPath: lastPathComponent, appIcon: selectedPng!.path())
-                        restore.PerformRestoreIcons2x(appPath: lastPathComponent, appIcon: selectedPng!.path())
-                        restore.PerformRestoreIcons3x(appPath: lastPathComponent, appIcon: selectedPng!.path())
+                        restore.PerformRestoreIcons(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon.png"))
+                        restore.PerformRestoreIcons2x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@2x.png"))
+                        restore.PerformRestoreIcons3x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@3x.png"))
                     }
                 }
             }
