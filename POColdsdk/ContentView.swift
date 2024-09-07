@@ -51,149 +51,172 @@ struct ContentView: View {
     let ipatool = IPATool.shared
     var body: some View {
         VStack {
-            Button("Automated Reddit Patch (PLIST)") {
-                print("[*] Start")
-                
-                let appsDictionary = restore.getApps()
-                
-                if !appsDictionary.isEmpty {
-                    if let redditPath = appsDictionary["com.reddit.Reddit"] {
-                        let lastPathComponent = (redditPath as NSString).lastPathComponent
-                        print("[*] Last path component: \(lastPathComponent)")
-                        
-                        print("[*] Downloading Info.plist")
-                        
-                        let app_name = "RedditApp.app"
-                        let app_url = ipatool.getIPALinks(bundleID: "com.reddit.Reddit", username: email, password: password)
-                        if app_url == "N/A" {
-                            print("Bruh")
-                            return
+            if !email.isEmpty && !password.isEmpty && !((selectedPng?.description.isEmpty) == nil) {
+                Button("AUTOMATED ALL APPS PATCH (RISKY!!!)") {
+                    print("[*] Okay.. Here we go. You're on your own now.")
+                    
+                    let appsDictionary = restore.getApps()
+                    
+                    if !appsDictionary.isEmpty {
+                        for (bundleid, app_path) in appsDictionary {
+                            let app_name = URL(string: app_path)!.lastPathComponent
+                            let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
+                            if app_url == "N/A" {
+                                print("Bruh")
+                                return
+                            }
+                            usleep(5000)
+                            //                    grabAssetsCar(app_url, app_name)
+                            grabInfoPlist(app_url, app_name)
                         }
-                        usleep(5000)
-                        grabInfoPlist(app_url, app_name)
-                        
-                        print("[*] Assuming that the Info.plist has already downloaded, lets patch it.")
-                        
-                        let plistPath = Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_INFO.plist")
-                        
-                        if let plistData = FileManager.default.contents(atPath: plistPath),
-                           var plist = try? PropertyListSerialization.propertyList(from: plistData, options: [], format: nil) as? [String: Any] {
+                    }
+                }
+                .padding()
+                .bold()
+                Button("Automated Reddit Patch (PLIST)") {
+                    print("[*] Start")
+                    
+                    let appsDictionary = restore.getApps()
+                    
+                    if !appsDictionary.isEmpty {
+                        if let redditPath = appsDictionary["com.reddit.Reddit"] {
+                            let lastPathComponent = (redditPath as NSString).lastPathComponent
+                            print("[*] Last path component: \(lastPathComponent)")
                             
-                            print("[*] Loaded plist.")
+                            print("[*] Downloading Info.plist")
                             
-                            if var iconsDict = plist["CFBundleIcons"] as? [String: Any],
-                               var primaryIconDict = iconsDict["CFBundlePrimaryIcon"] as? [String: Any] {
+                            let app_name = "RedditApp.app"
+                            let app_url = ipatool.getIPALinks(bundleID: "com.reddit.Reddit", username: email, password: password)
+                            if app_url == "N/A" {
+                                print("Bruh")
+                                return
+                            }
+                            usleep(5000)
+                            grabInfoPlist(app_url, app_name)
+                            
+                            print("[*] Assuming that the Info.plist has already downloaded, lets patch it.")
+                            
+                            let plistPath = Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_INFO.plist")
+                            
+                            if let plistData = FileManager.default.contents(atPath: plistPath),
+                               var plist = try? PropertyListSerialization.propertyList(from: plistData, options: [], format: nil) as? [String: Any] {
                                 
-                                primaryIconDict.removeValue(forKey: "CFBundleIconName")
+                                print("[*] Loaded plist.")
                                 
-                                primaryIconDict["CFBundleIconFiles"] = ["icon.png", "icon@2x.png", "icon@3x.png"]
-                                
-                                iconsDict["CFBundlePrimaryIcon"] = primaryIconDict
-                                plist["CFBundleIcons"] = iconsDict
-                                
-                                if let updatedPlistData = try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0) {
-                                    try? updatedPlistData.write(to: URL(fileURLWithPath: plistPath))
-                                    print("[*] Plist updated successfully.")
+                                if var iconsDict = plist["CFBundleIcons"] as? [String: Any],
+                                   var primaryIconDict = iconsDict["CFBundlePrimaryIcon"] as? [String: Any] {
+                                    
+                                    primaryIconDict.removeValue(forKey: "CFBundleIconName")
+                                    
+                                    primaryIconDict["CFBundleIconFiles"] = ["icon.png", "icon@2x.png", "icon@3x.png"]
+                                    
+                                    iconsDict["CFBundlePrimaryIcon"] = primaryIconDict
+                                    plist["CFBundleIcons"] = iconsDict
+                                    
+                                    if let updatedPlistData = try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0) {
+                                        try? updatedPlistData.write(to: URL(fileURLWithPath: plistPath))
+                                        print("[*] Plist updated successfully.")
+                                    } else {
+                                        print("[!] Failed to serialize updated plist data.")
+                                    }
                                 } else {
-                                    print("[!] Failed to serialize updated plist data.")
+                                    print("[!] CFBundlePrimaryIcon key not found in CFBundleIcons.")
                                 }
                             } else {
-                                print("[!] CFBundlePrimaryIcon key not found in CFBundleIcons.")
+                                print("[!] Failed to load the plist file.")
+                            }
+                            
+                            print("[*] Resizing Icons")
+                            // Maybe move do to the beginning of the function?
+                            do {
+                                let fileManager = FileManager.default
+                                
+                                // Copy items to the backup directory
+                                try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
+                                try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
+                                try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
+                                
+                                // Load the original image
+                                if let originalImage = NSImage(contentsOf: selectedPng!) {
+                                    // Resize images
+                                    let icon = resizeImage(image: originalImage, targetSize: NSSize(width: 60, height: 60))
+                                    let icon2x = resizeImage(image: originalImage, targetSize: NSSize(width: 120, height: 120))
+                                    let icon3x = resizeImage(image: originalImage, targetSize: NSSize(width: 180, height: 180))
+                                    
+                                    // Save resized images to the respective paths
+                                    if let iconData = icon?.tiffRepresentation,
+                                       let icon2xData = icon2x?.tiffRepresentation,
+                                       let icon3xData = icon3x?.tiffRepresentation {
+                                        
+                                        try iconData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
+                                        try icon2xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
+                                        try icon3xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
+                                        
+                                        print("[*] Icons resized successfully.")
+                                    } else {
+                                        print("[*] Failed to convert images to data.")
+                                    }
+                                } else {
+                                    print("[*] Failed to load original image.")
+                                }
+                            } catch {
+                                print("[*] Failed to resize icons. Error: \(error)")
+                            }
+                            
+                            print("[*] Start Copying Icons")
+                            restore.PerformRestorePlist(appPath: lastPathComponent, infoPlist: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_INFO.plist"))
+                            restore.PerformRestoreIcons(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon.png"))
+                            restore.PerformRestoreIcons2x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@2x.png"))
+                            restore.PerformRestoreIcons3x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@3x.png"))
+                        }
+                    }
+                }
+                .bold()
+                
+                
+                Button("Automated Reddit Patch") {
+                    print("[*] Start")
+                    
+                    // Assuming restore.getApps() returns a Dictionary<String, String>
+                    let appsDictionary = restore.getApps()
+                    
+                    if !appsDictionary.isEmpty {
+                        print("[*] Downloading .car")
+                        
+                        // Get the path for "com.reddit.Reddit"
+                        if let redditPath = appsDictionary["com.reddit.Reddit"] {
+                            print("[*] RedditApp path: \(redditPath)")
+                            
+                            let app_name = "RedditApp.app"
+                            let app_url = ipatool.getIPALinks(bundleID: "com.reddit.Reddit", username: email, password: password)
+                            if app_url == "N/A" {
+                                print("Bruh")
+                                return
+                            }
+                            usleep(5000)
+                            grabAssetsCar(app_url, app_name)
+                            
+                            // Get the last path component
+                            let lastPathComponent = (redditPath as NSString).lastPathComponent
+                            print("[*] Last path component: \(lastPathComponent)")
+                            
+                            // TODO: Unhardcode :troll:
+                            print("[*] Replacing icons with selected .png.")
+                            do {
+                                try themer.replaceIcons(icon: selectedPng!, car: Bundle.main.resourceURL!.appendingPathComponent("/assetbackups/RedditApp.app_ORIGINAL_ASSETS.car"))
+                                restore.PerformRestoreCar(appPath: lastPathComponent, car: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_ASSETS.car"))
+                            } catch {
+                                print("[!] Failed to patch assets.")
                             }
                         } else {
-                            print("[!] Failed to load the plist file.")
-                        }
-                        
-                        print("[*] Resizing Icons")
-                        // Maybe move do to the beginning of the function?
-                        do {
-                            let fileManager = FileManager.default
-                            
-                            // Copy items to the backup directory
-                            try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
-                            try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
-                            try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
-                            
-                            // Load the original image
-                            if let originalImage = NSImage(contentsOf: selectedPng!) {
-                                // Resize images
-                                let icon = resizeImage(image: originalImage, targetSize: NSSize(width: 60, height: 60))
-                                let icon2x = resizeImage(image: originalImage, targetSize: NSSize(width: 120, height: 120))
-                                let icon3x = resizeImage(image: originalImage, targetSize: NSSize(width: 180, height: 180))
-                                
-                                // Save resized images to the respective paths
-                                if let iconData = icon?.tiffRepresentation,
-                                   let icon2xData = icon2x?.tiffRepresentation,
-                                   let icon3xData = icon3x?.tiffRepresentation {
-                                   
-                                    try iconData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
-                                    try icon2xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
-                                    try icon3xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
-                                    
-                                    print("[*] Icons resized successfully.")
-                                } else {
-                                    print("[*] Failed to convert images to data.")
-                                }
-                            } else {
-                                print("[*] Failed to load original image.")
-                            }
-                        } catch {
-                            print("[*] Failed to resize icons. Error: \(error)")
-                        }
-                        
-                        print("[*] Start Copying Icons")
-                        restore.PerformRestorePlist(appPath: lastPathComponent, infoPlist: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_INFO.plist"))
-                        restore.PerformRestoreIcons(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon.png"))
-                        restore.PerformRestoreIcons2x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@2x.png"))
-                        restore.PerformRestoreIcons3x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@3x.png"))
-                    }
-                }
-            }
-            .bold()
-            
-            
-            Button("Automated Reddit Patch") {
-                print("[*] Start")
-                
-                // Assuming restore.getApps() returns a Dictionary<String, String>
-                let appsDictionary = restore.getApps()
-                
-                if !appsDictionary.isEmpty {
-                    print("[*] Downloading .car")
-                    
-                    // Get the path for "com.reddit.Reddit"
-                    if let redditPath = appsDictionary["com.reddit.Reddit"] {
-                        print("[*] RedditApp path: \(redditPath)")
-                        
-                        let app_name = "RedditApp.app"
-                        let app_url = ipatool.getIPALinks(bundleID: "com.reddit.Reddit", username: email, password: password)
-                        if app_url == "N/A" {
-                            print("Bruh")
-                            return
-                        }
-                        usleep(5000)
-                        grabAssetsCar(app_url, app_name)
-                        
-                        // Get the last path component
-                        let lastPathComponent = (redditPath as NSString).lastPathComponent
-                        print("[*] Last path component: \(lastPathComponent)")
-                        
-                        // TODO: Unhardcode :troll:
-                        print("[*] Replacing icons with selected .png.")
-                        do {
-                            try themer.replaceIcons(icon: selectedPng!, car: Bundle.main.resourceURL!.appendingPathComponent("/assetbackups/RedditApp.app_ORIGINAL_ASSETS.car"))
-                            restore.PerformRestoreCar(appPath: lastPathComponent, car: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_ASSETS.car"))
-                        } catch {
-                            print("[!] Failed to patch assets.")
+                            print("[!] com.reddit.Reddit path not found.")
                         }
                     } else {
-                        print("[!] com.reddit.Reddit path not found.")
+                        print("[!] getApps is empty.")
                     }
-                } else {
-                    print("[!] getApps is empty.")
                 }
+                .bold()
             }
-            .bold()
             
             Button("Select .car & .png") {
                 isFileImporterPresented = true
