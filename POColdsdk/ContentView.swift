@@ -51,9 +51,6 @@ struct ContentView: View {
     let ipatool = IPATool.shared
     var body: some View {
         VStack {
-            Button("a") {
-                print(Bundle.main.resourceURL!.appendingPathComponent("RedditApp.app_icon.car"))
-            }
             Button("Automated Reddit Patch (PLIST)") {
                 print("[*] Start")
                 
