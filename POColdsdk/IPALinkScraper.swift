@@ -54,7 +54,7 @@ class IPATool {
         sys.argv.append("--bundle-id")
         sys.argv.append(bundleID)
         sys.argv.append("-c")
-        sys.argv.append("SG")
+        sys.argv.append("RU")
         sys.argv.append("download")
         sys.argv.append("--appleid")
         sys.argv.append(username)
@@ -68,7 +68,7 @@ class IPATool {
 //            print("Enter password again with 2fa")
 //        }
 //        return "N/A"
-        return parseJSONAndGetDownloadLink(jsonString: String(restorer.main())!)!
+        return parseJSONAndGetDownloadLink(jsonString: String(restorer.main())!) ?? "Womp"
 //        print(restorer.main())
 //        return String(restorer.main())!
     }
