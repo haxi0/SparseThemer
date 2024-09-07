@@ -86,7 +86,7 @@ struct ContentView: View {
                                 print("[*] Found backup file: \(appBackupPath.path)")
 
                                 let iconFileName = "\(bundleID)-large.png"
-                                let iconPath = Bundle.main.resourceURL!.appendingPathComponent(iconFileName)
+                                let iconPath = Bundle.main.resourceURL!.appendingPathComponent("icons/\(iconFileName)")
 
                                 if FileManager.default.fileExists(atPath: iconPath.path) {
                                     print("[*] Replacing icons with \(iconFileName)")
@@ -105,6 +105,8 @@ struct ContentView: View {
                                 print("[!] No backup file found for \(bundleID).")
                             }
                         }
+                        
+                        print("[*] No way, it worked?")
                     } else {
                         print("[!] getApps is empty.")
                     }
