@@ -67,7 +67,7 @@ struct ContentView: View {
                             }
                             usleep(5000)
                             //                    grabAssetsCar(app_url, app_name)
-                            grabInfoPlist(app_url, app_name)
+                            grabAssetsCar(app_url, app_name)
                         }
                     }
                 }
