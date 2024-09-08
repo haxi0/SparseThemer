@@ -52,10 +52,50 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if !email.isEmpty && !password.isEmpty && !((selectedPng?.description.isEmpty) == nil) {
+                Button("Restore apps") {
+                    
+                    let appsDictionary = restore.getApps()
+                    if !appsDictionary.isEmpty {
+                        print("[*] Downloading .car files for all apps.")
+                        
+                        for (bundleid, app_path) in appsDictionary {
+                            let app_name = URL(string: app_path)!.lastPathComponent
+                            let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
+                            if app_url == "N/A" {
+                                print("Bruh")
+                                return
+                            }
+                            grabAssetsCar(app_url, app_name)
+                        }
+                        
+                        for (bundleID, appPath) in appsDictionary {
+                            print("[*] Processing app: \(bundleID)")
+
+                            let appName = URL(fileURLWithPath: appPath).lastPathComponent
+                            let appBackupPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(appName)_ORIGINAL_ASSETS.car")
+
+                            print("[*] App name: \(appName)")
+                            print("[*] Backup path: \(appBackupPath)")
+
+                            if FileManager.default.fileExists(atPath: appBackupPath.path) {
+                                print("[*] Found backup file: \(appBackupPath.path)")
+                                    do {
+                                        restore.PerformRestoreCar(appPath: appName, car: appBackupPath.path)
+                                        print("[*] Patched assets for \(bundleID).")
+                                    } catch {
+                                        print("[!] Failed to patch assets for \(bundleID). Error: \(error)")
+                                    }
+                            } else {
+                                print("[!] No backup file found for \(bundleID).")
+                            }
+                        }
+                    } else {
+                        print("[!] getApps is empty.")
+                    }
+                }
                 Button("AUTOMATED ALL APPS PATCH (CAR, RISKY!!!)") {
                     print("[*] Okay... Here we go. You're on your own now.")
                     
-                    // Assuming restore.getApps() returns a Dictionary<String, String>
                     let appsDictionary = restore.getApps()
                     
                     if !appsDictionary.isEmpty {
@@ -78,6 +118,7 @@ struct ContentView: View {
 
                             let appName = URL(fileURLWithPath: appPath).lastPathComponent
                             let appBackupPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(appName)_ORIGINAL_ASSETS.car")
+                            let moddedAppPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(appName)_MODDED_ASSETS.car")
 
                             print("[*] App name: \(appName)")
                             print("[*] Backup path: \(appBackupPath)")
@@ -85,7 +126,7 @@ struct ContentView: View {
                             if FileManager.default.fileExists(atPath: appBackupPath.path) {
                                 print("[*] Found backup file: \(appBackupPath.path)")
 
-                                let iconFileName = "\(bundleID)-large.png"
+                                let iconFileName = "icons/\(bundleID)-large.png"
                                 let iconPath = Bundle.main.resourceURL!.appendingPathComponent(iconFileName)
 
                                 if FileManager.default.fileExists(atPath: iconPath.path) {
@@ -93,7 +134,7 @@ struct ContentView: View {
 
                                     do {
                                         try themer.replaceIcons(icon: iconPath, car: appBackupPath)
-                                        restore.PerformRestoreCar(appPath: appName, car: appBackupPath.path)
+                                        restore.PerformRestoreCar(appPath: appName, car: moddedAppPath.path)
                                         print("[*] Patched assets for \(bundleID).")
                                     } catch {
                                         print("[!] Failed to patch assets for \(bundleID). Error: \(error)")

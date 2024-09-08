@@ -20,7 +20,14 @@ class Theme {
     static var shared = Theme()
     
     func replaceIcons(icon: URL, car: URL) throws {
-        let (catalog, renditionsRoot) = try AssetCatalogWrapper.shared.renditions(forCarArchive: car)
+        let originalPath = car.path
+        let moddedPath = originalPath.replacingOccurrences(of: "ORIGINAL_ASSETS.car", with: "MODDED_ASSETS.car")
+        let moddedURL = URL(fileURLWithPath: moddedPath)
+        
+        let fileManager = FileManager.default
+        try fileManager.copyItem(at: car, to: moddedURL)
+        
+        let (catalog, renditionsRoot) = try AssetCatalogWrapper.shared.renditions(forCarArchive: moddedURL)
         for rendition in renditionsRoot {
             let type = rendition.type
             guard type == .icon else { continue }

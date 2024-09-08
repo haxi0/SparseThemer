@@ -10,6 +10,7 @@
 		C81626182C87F74300604D27 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = C81626172C87F74300604D27 /* PythonKit */; };
 		C816261E2C882A5400604D27 /* IPALinkScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C816261D2C882A5400604D27 /* IPALinkScraper.swift */; };
 		C81626252C88AA2F00604D27 /* assetsgrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = C81626242C88AA2F00604D27 /* assetsgrabber.m */; };
+		C82478462C8CB70300DB520E /* icons in Resources */ = {isa = PBXBuildFile; fileRef = C82478452C8CB70300DB520E /* icons */; };
 		C87BA0872C8971C40026E717 /* libpartial.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C87BA0862C8971C40026E717 /* libpartial.dylib */; };
 		C87BA0892C8972780026E717 /* libpartial.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = C87BA0862C8971C40026E717 /* libpartial.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C87BA08C2C897B770026E717 /* sparserestore in Resources */ = {isa = PBXBuildFile; fileRef = C87BA08B2C897B770026E717 /* sparserestore */; };
@@ -63,6 +64,7 @@
 		C81626242C88AA2F00604D27 /* assetsgrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = assetsgrabber.m; sourceTree = "<group>"; };
 		C81626262C88AA3B00604D27 /* POColdsdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "POColdsdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		C81626272C88B17700604D27 /* assetsgrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = assetsgrabber.h; sourceTree = "<group>"; };
+		C82478452C8CB70300DB520E /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = POColdsdk/icons; sourceTree = "<group>"; };
 		C87BA0862C8971C40026E717 /* libpartial.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpartial.dylib; sourceTree = "<group>"; };
 		C87BA08B2C897B770026E717 /* sparserestore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sparserestore; sourceTree = "<group>"; };
 		C87BA08D2C897B7C0026E717 /* assetbackups */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assetbackups; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		FEBD6C7E2C875E2900D15960 = {
 			isa = PBXGroup;
 			children = (
+				C82478452C8CB70300DB520E /* icons */,
 				FEBD6C892C875E2900D15960 /* POColdsdk */,
 				FEBD6C9B2C875E2A00D15960 /* POColdsdkTests */,
 				FEBD6CA52C875E2B00D15960 /* POColdsdkUITests */,
@@ -308,6 +311,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C82478462C8CB70300DB520E /* icons in Resources */,
 				FEBD6C922C875E2A00D15960 /* Preview Assets.xcassets in Resources */,
 				C87BA08E2C897B7C0026E717 /* assetbackups in Resources */,
 				C87BA08C2C897B770026E717 /* sparserestore in Resources */,
