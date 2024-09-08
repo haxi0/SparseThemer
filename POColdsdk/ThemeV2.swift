@@ -45,7 +45,7 @@ class Theme {
                         intent: .defaultIntent
                     ) else { throw ImageError.unableToGetCGImage }
                     
-                    try catalog.editItem(rend, fileURL: car, to: .image(cgImage))
+                    try catalog.editItem(rend, fileURL: moddedURL, to: .image(cgImage))
                 } catch {
                     print("Error processing image: \(error)")
                 }
