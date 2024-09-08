@@ -26,6 +26,7 @@
 		FEBD6CBB2C876F4900D15960 /* ThemeV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBD6CBA2C876F4900D15960 /* ThemeV2.swift */; };
 		FEBD6CC12C8772EE00D15960 /* AssetCatalogWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = FEBD6CC02C8772EE00D15960 /* AssetCatalogWrapper */; };
 		FEBD6CC42C87739A00D15960 /* AssetCatalogWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = FEBD6CC32C87739A00D15960 /* AssetCatalogWrapper */; };
+		FED788892C8CDE5600E46153 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = FED788882C8CDE5500E46153 /* icons */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		FEBD6CA62C875E2B00D15960 /* POColdsdkUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POColdsdkUITests.swift; sourceTree = "<group>"; };
 		FEBD6CA82C875E2B00D15960 /* POColdsdkUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POColdsdkUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		FEBD6CBA2C876F4900D15960 /* ThemeV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeV2.swift; sourceTree = "<group>"; };
+		FED788882C8CDE5500E46153 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 		FEBD6C892C875E2900D15960 /* POColdsdk */ = {
 			isa = PBXGroup;
 			children = (
+				FED788882C8CDE5500E46153 /* icons */,
 				C87BA0962C89AD9B0026E717 /* assetgrabber */,
 				C87BA08D2C897B7C0026E717 /* assetbackups */,
 				C87BA08B2C897B770026E717 /* sparserestore */,
@@ -315,6 +318,7 @@
 				FEBD6C922C875E2A00D15960 /* Preview Assets.xcassets in Resources */,
 				C87BA08E2C897B7C0026E717 /* assetbackups in Resources */,
 				C87BA08C2C897B770026E717 /* sparserestore in Resources */,
+				FED788892C8CDE5600E46153 /* icons in Resources */,
 				FEBD6C8F2C875E2A00D15960 /* Assets.xcassets in Resources */,
 				C87BA0972C89AD9B0026E717 /* assetgrabber in Resources */,
 			);

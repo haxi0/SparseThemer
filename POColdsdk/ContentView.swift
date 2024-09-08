@@ -146,6 +146,8 @@ struct ContentView: View {
                                 print("[!] No backup file found for \(bundleID).")
                             }
                         }
+                        
+                        print("[*] No way, it worked?")
                     } else {
                         print("[!] getApps is empty.")
                     }
