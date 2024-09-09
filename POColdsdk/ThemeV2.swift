@@ -66,6 +66,10 @@ class Restore {
         let restorer = Python.import("restorer")
         restorer.restore_assetsCar(appPath, car)
     }
+    func PerformRestoreMultipleAssets(assetsDictionary: Dictionary<String, String>) {
+        let restorer = Python.import("restorer")
+        restorer.restore_multiple_assets(assetsDictionary)
+    }
     func PerformRestorePlist(appPath: String, infoPlist: String) {
         let restorer = Python.import("restorer")
         restorer.restore_assetsPlist(appPath, infoPlist)
@@ -84,7 +88,12 @@ class Restore {
     }
     func getApps() -> Dictionary<String, String> {
         let restorer = Python.import("restorer")
-        print(Dictionary<String, String>(restorer.get_apps())!)
+//        print(Dictionary<String, String>(restorer.get_apps())!)
         return Dictionary<String, String>(restorer.get_apps())!
+    }
+    func getSystemApps() -> Dictionary<String, String> {
+        let restorer = Python.import("restorer")
+//        print(Dictionary<String, String>(restorer.get_system_apps())!)
+        return Dictionary<String, String>(restorer.get_system_apps())!
     }
 }
