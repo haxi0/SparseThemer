@@ -51,7 +51,7 @@ struct ContentView: View {
     let ipatool = IPATool.shared
     var body: some View {
         VStack {
-            if !email.isEmpty && !password.isEmpty && !((selectedPng?.description.isEmpty) == nil) {
+            if !email.isEmpty && !password.isEmpty {
                 Button("Restore apps") {
                     let appsDictionary = restore.getApps()
                     if !appsDictionary.isEmpty {

@@ -62,29 +62,9 @@ class Restore {
         print(sys.path)
         sys.path.append(Restore.dirPath)
     }
-    func PerformRestoreCar(appPath: String, car: String) {
-        let restorer = Python.import("restorer")
-        restorer.restore_assetsCar(appPath, car)
-    }
     func PerformRestoreMultipleAssets(assetsDictionary: Dictionary<String, String>) {
         let restorer = Python.import("restorer")
         restorer.restore_multiple_assets(assetsDictionary)
-    }
-    func PerformRestorePlist(appPath: String, infoPlist: String) {
-        let restorer = Python.import("restorer")
-        restorer.restore_assetsPlist(appPath, infoPlist)
-    }
-    func PerformRestoreIcons(appPath: String, appIcon: String) {
-        let restorer = Python.import("restorer")
-        restorer.restore_assetsIcon(appPath, appIcon)
-    }
-    func PerformRestoreIcons2x(appPath: String, appIcon: String) {
-        let restorer = Python.import("restorer")
-        restorer.restore_assetsIcon2x(appPath, appIcon)
-    }
-    func PerformRestoreIcons3x(appPath: String, appIcon: String) {
-        let restorer = Python.import("restorer")
-        restorer.restore_assetsIcon3x(appPath, appIcon)
     }
     func getApps() -> Dictionary<String, String> {
         let restorer = Python.import("restorer")
