@@ -51,9 +51,6 @@ struct ContentView: View {
     let ipatool = IPATool.shared
     var body: some View {
         VStack {
-            Button("Clear UICache Test") {
-                restore.mobileTest(filePath: "/Users/haxi0/garbage", restorePath: "/Library/Caches/com.apple.springboard/MappedImageCache/", restoreFile: "MTMappedImageCache")
-            }
             if !email.isEmpty && !password.isEmpty {
                 Button("Restore apps") {
                     let appsDictionary = restore.getApps()

@@ -66,10 +66,6 @@ class Restore {
         let restorer = Python.import("restorer")
         restorer.restore_multiple_assets(assetsDictionary)
     }
-    func mobileTest(filePath: String, restorePath: String, restoreFile: String) {
-        let restorer = Python.import("restorer")
-        restorer.restore_file_mobile(filePath, restorePath, restoreFile)
-    }
     func getApps() -> Dictionary<String, String> {
         let restorer = Python.import("restorer")
 //        print(Dictionary<String, String>(restorer.get_apps())!)
