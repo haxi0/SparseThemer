@@ -6,6 +6,11 @@ SparseThemer is a small macOS app that uses the [SparseRestore](https://github.c
 You may be asking: Okay, but [Cowabunga Lite](https://github.com/leminlimez/CowabungaLite) exists! 
 And you're right. The only upside to this is that it **allows you to keep your badges**, because it's theming the actual app and not creating bookmarks.
 
+## How to use?
+* pip install pymobiledevice3
+* unzip .zip to Applications
+* plug in phone and enjoy
+
 ## How does it work?
 * SparseThemer takes list of apps, cross checks against a set theme's list of bundle IDs.
 * SparseThemer downloads the Assets.car using [ipatool-py](https://github.com/NyaMisty/ipatool-py)
