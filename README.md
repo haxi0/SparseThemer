@@ -20,7 +20,7 @@ And you're right. The only upside to this is that it **allows you to keep your b
 * Crashes if you don't have a phone plugged in and try restoring
 * Takes up quite a bit of storage because of all the assets. If you want to remove the existing assets, remove it from `~/Library/Application Support/org.haxi0htrowii.SparseThemer/assetbackups`
 
-* 
+
 ## Credits
 * [ipatool-py](https://github.com/NyaMisty/ipatool-py)
 * [PrivateKits](https://github.com/NSAntoine/PrivateKits/tree/haxi-test)
