@@ -25,6 +25,7 @@ class Theme {
         let moddedURL = URL(fileURLWithPath: moddedPath)
         
         let fileManager = FileManager.default
+        try? fileManager.removeItem(at: moddedURL)
         try fileManager.copyItem(at: car, to: moddedURL)
         
         let (catalog, renditionsRoot) = try AssetCatalogWrapper.shared.renditions(forCarArchive: moddedURL)

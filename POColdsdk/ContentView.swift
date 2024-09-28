@@ -1,21 +1,30 @@
-//
-//  ContentView.swift
-//  POC
-//
-//  Created by haxi0 on 03.09.2024.
-//
-
 import SwiftUI
 import Foundation
 import AppKit
 
+class Logger: ObservableObject {
+    @Published var logs: [String] = []
+    
+    func log(_ message: String) {
+        DispatchQueue.main.async {
+            self.logs.append(message)
+        }
+    }
+}
+
+func getApplicationSupportDirectory() -> URL {
+    let appSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+    let directoryPath = appSupportDirectory.appendingPathComponent(Bundle.main.bundleIdentifier ?? "MyApp")
+    
+    try? FileManager.default.createDirectory(at: directoryPath, withIntermediateDirectories: true, attributes: nil)
+    
+    return directoryPath
+}
+
+
 func parseAppsOutput(_ output: String) -> [String: String]? {
     var result: [String: String] = [:]
-    
-    // Removing brackets and splitting the entries
     let entries = output.trimmingCharacters(in: CharacterSet(charactersIn: "[]")).components(separatedBy: ", ")
-    
-    // Iterating over each entry to split key-value pairs
     for entry in entries {
         let pair = entry.components(separatedBy: ": ")
         if pair.count == 2 {
@@ -24,7 +33,6 @@ func parseAppsOutput(_ output: String) -> [String: String]? {
             result[key] = value
         }
     }
-    
     return result
 }
 
@@ -43,297 +51,65 @@ struct ContentView: View {
     @State private var isFileImporterPresented = false
     @State private var selectedCar: URL? = nil
     @State private var selectedPng: URL? = nil
-    @State private var selectedFolder: URL? = nil // New state for selected folder
+    @State private var selectedFolder: URL? = nil
     @State private var email: String = ""
     @State private var password: String = ""
+    @ObservedObject private var logger = Logger()
+
     let themer = Theme.shared
     let restore = Restore.shared
     let ipatool = IPATool.shared
+    
     var body: some View {
         VStack {
-            if !email.isEmpty && !password.isEmpty && !((selectedPng?.description.isEmpty) == nil) {
+            if !email.isEmpty && !password.isEmpty {
                 Button("Restore apps") {
-                    let appsDictionary = restore.getApps()
-                    if !appsDictionary.isEmpty {
-                        print("[*] Downloading .car files for all apps.")
-                        var assetsDictionary = [String: String]()
-                        for (bundleid, app_path) in appsDictionary {
-                            let app_name = URL(string: app_path)!.lastPathComponent
-                            let appBackupPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(app_name)_ORIGINAL_ASSETS.car")
-                            if FileManager.default.fileExists(atPath: appBackupPath.path) {
-                                print("File already exists at \(appBackupPath). Skipping download.")
-                            } else {
-                                let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
-                                if app_url == "N/A" {
-                                    print("Bruh")
-                                    return
-                                }
-                                grabAssetsCar(app_url, app_name)
-                            }
-                        }
-                        
-                        for (bundleID, appPath) in appsDictionary {
-                            print("[*] Processing app: \(bundleID)")
-
-                            let appName = URL(fileURLWithPath: appPath).lastPathComponent
-                            let appBackupPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(appName)_ORIGINAL_ASSETS.car")
-
-                            print("[*] App name: \(appName)")
-                            print("[*] Backup path: \(appBackupPath)")
-
-                            if FileManager.default.fileExists(atPath: appBackupPath.path) {
-                                print("[*] Found backup file: \(appBackupPath.path)")
-                                assetsDictionary[appName] = appBackupPath.path
-                            } else {
-                                print("[!] No backup file found for \(bundleID).")
-                            }
-                        }
-                        restore.PerformRestoreMultipleAssets(assetsDictionary: assetsDictionary)
-                    } else {
-                        print("[!] getApps is empty.")
+                    Task {
+                        await restoreApps()
                     }
                 }
-//                Button("Make bookmarks for system apps") {
-//                    
-//                    print("[*] No way, it worked?")
-//                }
-//                .padding()
-//                .bold()
+                
                 Button("Theme User Apps") {
-                    let appsDictionary = restore.getApps()
-                    
-                    if !appsDictionary.isEmpty {
-                        print("[*] Downloading .car files for all apps.")
-                        var assetsDictionary = [String: String]()
-                        for (bundleid, app_path) in appsDictionary {
-                            let app_name = URL(string: app_path)!.lastPathComponent
-                            let appBackupPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(app_name)_ORIGINAL_ASSETS.car")
-                            if FileManager.default.fileExists(atPath: appBackupPath.path) {
-                                print("File already exists at \(appBackupPath). Skipping download.")
-                            } else {
-                                let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
-                                if app_url == "N/A" {
-                                    print("Bruh")
-                                    return
-                                }
-                                grabAssetsCar(app_url, app_name)
-                            }
-                        }
-                        
-                        for (bundleID, appPath) in appsDictionary {
-                            print("[*] Processing app: \(bundleID)")
-
-                            let appName = URL(fileURLWithPath: appPath).lastPathComponent
-                            let appBackupPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(appName)_ORIGINAL_ASSETS.car")
-                            let moddedAppPath = Bundle.main.resourceURL!.appendingPathComponent("assetbackups/\(appName)_MODDED_ASSETS.car")
-
-                            print("[*] App name: \(appName)")
-                            print("[*] Backup path: \(appBackupPath)")
-
-                            if FileManager.default.fileExists(atPath: appBackupPath.path) {
-                                print("[*] Found backup file: \(appBackupPath.path)")
-
-                                let iconFileName = "\(bundleID)-large.png"
-                                let iconFolderPath = selectedFolder ?? Bundle.main.resourceURL!.appendingPathComponent("icons")
-                                let iconPath = iconFolderPath.appendingPathComponent(iconFileName)
-                                
-                                if FileManager.default.fileExists(atPath: iconPath.path) {
-                                    print("[*] Replacing icons with \(iconFileName)")
-
-                                    do {
-                                        try themer.replaceIcons(icon: iconPath, car: appBackupPath)
-                                        assetsDictionary[appName] = moddedAppPath.path
-//                                        restore.PerformRestoreCar(appPath: appName, car: moddedAppPath.path)
-                                        print("[*] Patched assets for \(bundleID).")
-                                    } catch {
-                                        print("[!] Failed to patch assets for \(bundleID). Error: \(error)")
-                                    }
-                                } else {
-                                    print("[!] Icon file \(iconFileName) not found.")
-                                }
-                            } else {
-                                print("[!] No backup file found for \(bundleID).")
-                            }
-                        }
-//                        print(assetsDictionary)
-                        restore.PerformRestoreMultipleAssets(assetsDictionary: assetsDictionary)
-                        print("[*] No way, it worked?")
-                    } else {
-                        print("[!] getApps is empty.")
+                    Task {
+                        await themeUserApps()
                     }
                 }
                 .padding()
                 .bold()
-                
-//                Button("Automated Reddit Patch (PLIST)") {
-//                    print("[*] Start")
-//                    
-//                    let appsDictionary = restore.getApps()
-//                    
-//                    if !appsDictionary.isEmpty {
-//                        if let redditPath = appsDictionary["com.reddit.Reddit"] {
-//                            let lastPathComponent = (redditPath as NSString).lastPathComponent
-//                            print("[*] Last path component: \(lastPathComponent)")
-//                            
-//                            print("[*] Downloading Info.plist")
-//                            
-//                            let app_name = "RedditApp.app"
-//                            let app_url = ipatool.getIPALinks(bundleID: "com.reddit.Reddit", username: email, password: password)
-//                            if app_url == "N/A" {
-//                                print("Bruh")
-//                                return
-//                            }
-//                            grabInfoPlist(app_url, app_name)
-//                            
-//                            print("[*] Assuming that the Info.plist has already downloaded, lets patch it.")
-//                            
-//                            let plistPath = Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_INFO.plist")
-//                            
-//                            if let plistData = FileManager.default.contents(atPath: plistPath),
-//                               var plist = try? PropertyListSerialization.propertyList(from: plistData, options: [], format: nil) as? [String: Any] {
-//                                
-//                                print("[*] Loaded plist.")
-//                                
-//                                if var iconsDict = plist["CFBundleIcons"] as? [String: Any],
-//                                   var primaryIconDict = iconsDict["CFBundlePrimaryIcon"] as? [String: Any] {
-//                                    
-//                                    primaryIconDict.removeValue(forKey: "CFBundleIconName")
-//                                    
-//                                    primaryIconDict["CFBundleIconFiles"] = ["icon.png", "icon@2x.png", "icon@3x.png"]
-//                                    
-//                                    iconsDict["CFBundlePrimaryIcon"] = primaryIconDict
-//                                    plist["CFBundleIcons"] = iconsDict
-//                                    
-//                                    if let updatedPlistData = try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0) {
-//                                        try? updatedPlistData.write(to: URL(fileURLWithPath: plistPath))
-//                                        print("[*] Plist updated successfully.")
-//                                    } else {
-//                                        print("[!] Failed to serialize updated plist data.")
-//                                    }
-//                                } else {
-//                                    print("[!] CFBundlePrimaryIcon key not found in CFBundleIcons.")
-//                                }
-//                            } else {
-//                                print("[!] Failed to load the plist file.")
-//                            }
-//                            
-//                            print("[*] Resizing Icons")
-//                            // Maybe move do to the beginning of the function?
-//                            do {
-//                                let fileManager = FileManager.default
-//                                
-//                                // Copy items to the backup directory
-//                                try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
-//                                try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
-//                                try fileManager.copyItem(at: selectedPng!, to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
-//                                
-//                                // Load the original image
-//                                if let originalImage = NSImage(contentsOf: selectedPng!) {
-//                                    // Resize images
-//                                    let icon = resizeImage(image: originalImage, targetSize: NSSize(width: 60, height: 60))
-//                                    let icon2x = resizeImage(image: originalImage, targetSize: NSSize(width: 120, height: 120))
-//                                    let icon3x = resizeImage(image: originalImage, targetSize: NSSize(width: 180, height: 180))
-//                                    
-//                                    // Save resized images to the respective paths
-//                                    if let iconData = icon?.tiffRepresentation,
-//                                       let icon2xData = icon2x?.tiffRepresentation,
-//                                       let icon3xData = icon3x?.tiffRepresentation {
-//                                        
-//                                        try iconData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon.png"))
-//                                        try icon2xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@2x.png"))
-//                                        try icon3xData.write(to: Bundle.main.resourceURL!.appendingPathComponent("\(lastPathComponent)_icon@3x.png"))
-//                                        
-//                                        print("[*] Icons resized successfully.")
-//                                    } else {
-//                                        print("[*] Failed to convert images to data.")
-//                                    }
-//                                } else {
-//                                    print("[*] Failed to load original image.")
-//                                }
-//                            } catch {
-//                                print("[*] Failed to resize icons. Error: \(error)")
-//                            }
-//                            
-//                            print("[*] Start Copying Icons")
-//                            restore.PerformRestorePlist(appPath: lastPathComponent, infoPlist: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_INFO.plist"))
-//                            restore.PerformRestoreIcons(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon.png"))
-//                            restore.PerformRestoreIcons2x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@2x.png"))
-//                            restore.PerformRestoreIcons3x(appPath: lastPathComponent, appIcon: Bundle.main.resourcePath!.appending("/\(lastPathComponent)_icon@3x.png"))
-//                        }
-//                    }
-//                }
-//                .bold()
-//                
-//                
-//                Button("Automated Reddit Patch") {
-//                    print("[*] Start")
-//                    let appsDictionary = restore.getApps()
-//                    if !appsDictionary.isEmpty {
-//                        print("[*] Downloading .car")
-//                        
-//                        if let redditPath = appsDictionary["com.reddit.Reddit"] {
-//                            print("[*] RedditApp path: \(redditPath)")
-//                            
-//                            let app_name = "RedditApp.app"
-//                            let app_url = ipatool.getIPALinks(bundleID: "com.reddit.Reddit", username: email, password: password)
-//                            if app_url == "N/A" {
-//                                print("Bruh")
-//                                return
-//                            }
-//                            grabAssetsCar(app_url, app_name)
-//                                                        let lastPathComponent = (redditPath as NSString).lastPathComponent
-//                            print("[*] Last path component: \(lastPathComponent)")
-//                            
-//                            // TODO: Unhardcode :troll:
-//                            print("[*] Replacing icons with selected .png.")
-//                            do {
-//                                try themer.replaceIcons(icon: selectedPng!, car: Bundle.main.resourceURL!.appendingPathComponent("/assetbackups/RedditApp.app_ORIGINAL_ASSETS.car"))
-//                                restore.PerformRestoreCar(appPath: lastPathComponent, car: Bundle.main.resourcePath!.appending("/assetbackups/RedditApp.app_ORIGINAL_ASSETS.car"))
-//                            } catch {
-//                                print("[!] Failed to patch assets.")
-//                            }
-//                        } else {
-//                            print("[!] com.reddit.Reddit path not found.")
-//                        }
-//                    } else {
-//                        print("[!] getApps is empty.")
-//                    }
-//                }
-//                .bold()
             }
             
-            Button("Select .car, .png, or folder") {
-                isFileImporterPresented = true
-            }
-            /*
-             Button("Replace Images") {
-             do {
-             try themer.replaceIcons(icon: selectedPng!, car: selectedCar!)
-             } catch {
-             print("kys")
-             }
-             }
-             Button("Try restoring") {
-             //no
-             }
-             */
             TextField("Enter username", text: $email)
             TextField("Enter password", text: $password)
-            /*
-             Button("Log in with ipatool to get info") {
-             for (bundleid, app_path) in apps {
-             let app_name = URL(string: app_path)!.lastPathComponent
-             let app_url = ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
-             if app_url == "N/A" {
-             print("Bruh")
-             return
-             }
-             usleep(5000)
-             //                    grabAssetsCar(app_url, app_name)
-             grabInfoPlist(app_url, app_name)
-             }
-             }
-             */
+            
+            // Button to select a custom theme folder
+            Button("Select Custom Theme Folder") {
+                isFileImporterPresented = true
+            }
+            .padding()
+
+            // Check if a custom theme folder is selected
+            if let selectedFolder = selectedFolder {
+                Text("Selected Theme Folder: \(selectedFolder.path)")
+                    .foregroundColor(.green)
+            } else {
+                Text("No Theme Folder Selected")
+                    .foregroundColor(.red)
+            }
+            
+            ScrollView {
+                VStack(alignment: .leading) {
+                    ForEach(logger.logs, id: \.self) { log in
+                        Text(log)
+                            .font(.system(size: 12))
+                            .foregroundColor(.white)
+                            .padding(2)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.black)
+            }
+            .frame(height: 200)
+            .padding(.top, 20)
         }
         .fileImporter(
             isPresented: $isFileImporterPresented,
@@ -342,24 +118,126 @@ struct ContentView: View {
                 switch result {
                 case .success(let url):
                     if url.hasDirectoryPath {
-                        // If a folder is selected, update the selectedFolder state
                         selectedFolder = url
-                        print("Selected folder: \(url.path)")
+                        logger.log("Selected folder: \(url.path)")
                     } else if url.lastPathComponent.contains(".car") {
                         selectedCar = url
                     } else if url.lastPathComponent.contains(".png") {
                         selectedPng = url
                     } else {
-                        print("That's not a .car neither a .png file, silly")
+                        logger.log("That's not a .car neither a .png file, silly")
                     }
                 case .failure(let error):
-                    print("Failed to select file: \(error.localizedDescription)")
+                    logger.log("Failed to select file: \(error.localizedDescription)")
                 }
             }
         )
     }
-}
-
-#Preview {
-    ContentView()
+    
+    private func restoreApps() async {
+        let appsDictionary = await restore.getApps()
+        if !appsDictionary.isEmpty {
+            logger.log("[*] Downloading .car files for all apps.")
+            var assetsDictionary = [String: String]()
+            
+            for (bundleid, app_path) in appsDictionary {
+                let app_name = URL(string: app_path)!.lastPathComponent
+                let appBackupPath = getApplicationSupportDirectory().appendingPathComponent("assetbackups/\(app_name)_ORIGINAL_ASSETS.car")
+                if FileManager.default.fileExists(atPath: appBackupPath.path) {
+                    logger.log("File already exists at \(appBackupPath). Skipping download.")
+                } else {
+                    let app_url = await ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
+                    if app_url == "N/A" {
+                        logger.log("Bruh")
+                        return
+                    }
+                    await grabAssetsCar(app_url, app_name)
+                }
+            }
+            
+            for (bundleID, appPath) in appsDictionary {
+                logger.log("[*] Processing app: \(bundleID)")
+                let appName = URL(fileURLWithPath: appPath).lastPathComponent
+                let appBackupPath = getApplicationSupportDirectory().appendingPathComponent("assetbackups/\(appName)_ORIGINAL_ASSETS.car")
+                
+                logger.log("[*] App name: \(appName)")
+                logger.log("[*] Backup path: \(appBackupPath)")
+                
+                if FileManager.default.fileExists(atPath: appBackupPath.path) {
+                    logger.log("[*] Found backup file: \(appBackupPath.path)")
+                    assetsDictionary[appName] = appBackupPath.path
+                } else {
+                    logger.log("[!] No backup file found for \(bundleID).")
+                }
+            }
+            
+            await restore.PerformRestoreMultipleAssets(assetsDictionary: assetsDictionary)
+            logger.log("[*] No way, it worked?")
+        } else {
+            logger.log("[!] getApps is empty.")
+        }
+    }
+    
+    private func themeUserApps() async {
+        let appsDictionary = await restore.getApps()
+        
+        if !appsDictionary.isEmpty {
+            logger.log("[*] Downloading .car files for all apps.")
+            var assetsDictionary = [String: String]()
+            
+            for (bundleid, app_path) in appsDictionary {
+                let app_name = URL(string: app_path)!.lastPathComponent
+                let appBackupPath = getApplicationSupportDirectory().appendingPathComponent("assetbackups/\(app_name)_ORIGINAL_ASSETS.car")
+                if FileManager.default.fileExists(atPath: appBackupPath.path) {
+                    logger.log("File already exists at \(appBackupPath). Skipping download.")
+                } else {
+                    let app_url = await ipatool.getIPALinks(bundleID: bundleid, username: email, password: password)
+                    if app_url == "N/A" {
+                        logger.log("Bruh")
+                        return
+                    }
+                    await grabAssetsCar(app_url, app_name)
+                }
+            }
+            
+            for (bundleID, appPath) in appsDictionary {
+                logger.log("[*] Processing app: \(bundleID)")
+                let appName = URL(fileURLWithPath: appPath).lastPathComponent
+                let appBackupPath = getApplicationSupportDirectory().appendingPathComponent("assetbackups/\(appName)_ORIGINAL_ASSETS.car")
+                let moddedAppPath = getApplicationSupportDirectory().appendingPathComponent("assetbackups/\(appName)_MODDED_ASSETS.car")
+                
+                logger.log("[*] App name: \(appName)")
+                logger.log("[*] Backup path: \(appBackupPath)")
+                
+                if FileManager.default.fileExists(atPath: appBackupPath.path) {
+                    logger.log("[*] Found backup file: \(appBackupPath.path)")
+                    
+                    let iconFileName = "\(bundleID)-large.png"
+                    let iconFolderPath = selectedFolder ?? Bundle.main.resourceURL!.appendingPathComponent("icons")
+                    let iconPath = iconFolderPath.appendingPathComponent(iconFileName)
+                    
+                    if FileManager.default.fileExists(atPath: iconPath.path) {
+                        logger.log("[*] Replacing icons with \(iconFileName)")
+                        
+                        do {
+                            try themer.replaceIcons(icon: iconPath, car: appBackupPath)
+                            assetsDictionary[appName] = moddedAppPath.path
+                            logger.log("[*] Patched assets for \(bundleID).")
+                        } catch {
+                            logger.log("[!] Failed to patch assets for \(bundleID). Error: \(error)")
+                        }
+                    } else {
+                        logger.log("[!] Icon file \(iconFileName) not found.")
+                    }
+                } else {
+                    logger.log("[!] No backup file found for \(bundleID).")
+                }
+            }
+            
+            restore.PerformRestoreMultipleAssets(assetsDictionary: assetsDictionary)
+            logger.log("[*] No way, it worked?")
+        } else {
+            logger.log("[!] getApps is empty.")
+        }
+    }
 }
