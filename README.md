@@ -7,6 +7,8 @@ You may be asking: Okay, but [Cowabunga Lite](https://github.com/leminlimez/Cowa
 And you're right. The only upside to this is that it **allows you to keep your badges**, because it's theming the actual app and not creating bookmarks.
 
 ## How to use?
+> [!IMPORTANT]
+> THIS CURRENTLY ASSUMES [HOMEBREW](https://brew.sh) PYTHON.
 * pip install pymobiledevice3, click, requests
 * unzip .zip to Applications
 * plug in phone and enjoy
